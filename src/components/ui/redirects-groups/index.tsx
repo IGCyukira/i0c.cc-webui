@@ -146,7 +146,7 @@ export function RedirectsGroupsManager({
 
   if (isLoading) {
     return (
-      <div className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-10 sm:flex-row items-start">
+      <div className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-10 sm:flex-row">
         <div className="hidden sm:block order-1 w-full sm:w-64 lg:w-80 shrink-0">
           <Sidebar title="分组" footer={sidebarFooter}>
             <div />
@@ -161,7 +161,7 @@ export function RedirectsGroupsManager({
 
   if (loadError) {
     return (
-      <div className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-10 sm:flex-row items-start">
+      <div className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-10 sm:flex-row">
         <div className="hidden sm:block order-1 w-full sm:w-64 lg:w-80 shrink-0">
           <Sidebar title="分组" footer={sidebarFooter}>
             <div className="text-sm text-slate-600">无法加载分组</div>
@@ -175,7 +175,7 @@ export function RedirectsGroupsManager({
   }
 
   return (
-    <div className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-10 sm:flex-row items-start">
+    <div className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-10 sm:flex-row">
       <div className="hidden sm:block order-1 w-full sm:w-64 lg:w-80 shrink-0">
         <Sidebar title="分组管理" footer={sidebarFooter}>
           {sidebarBody}

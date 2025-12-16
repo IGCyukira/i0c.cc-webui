@@ -16,7 +16,7 @@ export function AppHeader({ mobileSidebarToggle }: AppHeaderProps) {
 
   return (
     <header className="sticky top-0 z-40 border-b-2 border-slate-200/70 bg-white/80 backdrop-blur shadow-md rounded-b-2xl">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
+      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6 sm:py-5">
         <div className="flex min-w-0 items-center gap-3">
           {mobileSidebarToggle ? (
             <button
@@ -57,7 +57,7 @@ export function AppHeader({ mobileSidebarToggle }: AppHeaderProps) {
             priority
           />
           <span className="truncate text-lg font-semibold text-slate-900">i0c.cc 控制台</span>
-          <span className="inline-flex h-5 items-center justify-center rounded-full border border-slate-200 bg-white px-2 text-[11px] font-medium leading-none text-slate-500">
+          <span className="hidden sm:inline-flex h-5 items-center justify-center rounded-full border border-slate-200 bg-white px-2 text-[11px] font-medium leading-none text-slate-500">
             Beta
           </span>
         </div>
@@ -73,7 +73,7 @@ export function AppHeader({ mobileSidebarToggle }: AppHeaderProps) {
                 className="rounded-full border border-slate-200"
               />
             ) : null}
-            <span className="max-w-[16rem] truncate text-sm text-slate-600">
+            <span className="hidden sm:block max-w-[16rem] truncate text-sm text-slate-600">
               {session.user?.name ?? session.user?.email ?? "已登录"}
             </span>
             <button
