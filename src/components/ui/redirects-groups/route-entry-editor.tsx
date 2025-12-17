@@ -3,6 +3,7 @@
 import { useCallback, useMemo } from "react";
 
 type RouteMode = "string" | "object" | "array";
+type DestinationKey = "target" | "to" | "url";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -38,6 +39,34 @@ function getMode(value: unknown): RouteMode {
 
 function createEmptyConfig(): Record<string, unknown> {
   return { type: "prefix", target: "", appendPath: true };
+}
+
+function getDestinationKey(config: Record<string, unknown>): DestinationKey {
+  if (typeof config.target === "string") {
+    return "target";
+  }
+  if (typeof config.to === "string") {
+    return "to";
+  }
+  if (typeof config.url === "string") {
+    return "url";
+  }
+  return "target";
+}
+
+function setExclusiveDestination(
+  config: Record<string, unknown>,
+  key: DestinationKey,
+  value: string
+): Record<string, unknown> {
+  const next: Record<string, unknown> = { ...config };
+
+  delete next.target;
+  delete next.to;
+  delete next.url;
+
+  next[key] = value;
+  return next;
 }
 
 export type RouteEntryEditorProps = {
@@ -158,13 +187,32 @@ export function RouteEntryEditor({ value, onChange, level = 0 }: RouteEntryEdito
 
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
             <div className="sm:col-span-2">
-              <label className="block text-xs font-medium text-slate-600">target（或 to/url）</label>
-              <input
-                value={asString(configValue.target ?? configValue.to ?? configValue.url)}
-                onChange={(e) => onChange({ ...configValue, target: e.target.value })}
-                placeholder="https://example.com"
-                className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-slate-300"
-              />
+              <label className="block text-xs font-medium text-slate-600">目标地址</label>
+              <div className="mt-1 flex gap-2">
+                <select
+                  value={getDestinationKey(configValue)}
+                  onChange={(e) => {
+                    const nextKey = e.target.value as DestinationKey;
+                    const currentKey = getDestinationKey(configValue);
+                    const currentValue = asString(configValue[currentKey]);
+                    onChange(setExclusiveDestination(configValue, nextKey, currentValue));
+                  }}
+                  className="w-28 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-slate-300"
+                >
+                  <option value="target">target</option>
+                  <option value="to">to</option>
+                  <option value="url">url</option>
+                </select>
+                <input
+                  value={asString(configValue[getDestinationKey(configValue)])}
+                  onChange={(e) => {
+                    const nextKey = getDestinationKey(configValue);
+                    onChange(setExclusiveDestination(configValue, nextKey, e.target.value));
+                  }}
+                  placeholder="https://example.com"
+                  className="min-w-0 flex-1 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-slate-300"
+                />
+              </div>
             </div>
 
             <div>
@@ -197,25 +245,6 @@ export function RouteEntryEditor({ value, onChange, level = 0 }: RouteEntryEdito
                 placeholder="0"
                 className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-slate-300"
               />
-            </div>
-
-            <div className="sm:col-span-2">
-              <label className="block text-xs font-medium text-slate-600">（可选）to/url</label>
-              <div className="mt-1 flex gap-2">
-                <input
-                  value={asString(configValue.to)}
-                  onChange={(e) => onChange({ ...configValue, to: e.target.value })}
-                  placeholder="to"
-                  className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-slate-300"
-                />
-                <input
-                  value={asString(configValue.url)}
-                  onChange={(e) => onChange({ ...configValue, url: e.target.value })}
-                  placeholder="url"
-                  className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-slate-300"
-                />
-              </div>
-              <p className="mt-1 text-xs text-slate-500">Schema 要求 target/to/url 至少存在一个；这里会优先写入 target。</p>
             </div>
           </div>
         </div>

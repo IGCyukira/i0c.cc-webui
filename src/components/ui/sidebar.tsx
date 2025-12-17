@@ -112,7 +112,7 @@ export function GroupTree({
                     ? "border-slate-200 text-slate-600 hover:bg-slate-50"
                     : "border-slate-200 text-slate-300 cursor-not-allowed")
                 }
-                title={canNest ? "新增子分组" : `最多支持 ${MAX_GROUP_DEPTH} 层`}
+                title={canNest ? "新增子分组" : `建议最多 ${MAX_GROUP_DEPTH} 层`}
               >
                 <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5" stroke="currentColor" strokeWidth="2">
                   <path d="M12 6v12m6-6H6" strokeLinecap="round" strokeLinejoin="round" />

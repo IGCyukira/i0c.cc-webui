@@ -70,11 +70,13 @@
         },
         "to": {
           "type": "string",
+          "minLength": 1,
           "description": "Alias for target.",
           "format": "uri-reference"
         },
         "url": {
           "type": "string",
+          "minLength": 1,
           "description": "Alias for target.",
           "format": "uri-reference"
         },
@@ -109,10 +111,34 @@
           ]
         }
       },
-      "anyOf": [
-        { "required": ["target"] },
-        { "required": ["to"] },
-        { "required": ["url"] }
+      "oneOf": [
+        {
+          "required": ["target"],
+          "not": {
+            "anyOf": [
+              { "required": ["to"] },
+              { "required": ["url"] }
+            ]
+          }
+        },
+        {
+          "required": ["to"],
+          "not": {
+            "anyOf": [
+              { "required": ["target"] },
+              { "required": ["url"] }
+            ]
+          }
+        },
+        {
+          "required": ["url"],
+          "not": {
+            "anyOf": [
+              { "required": ["target"] },
+              { "required": ["to"] }
+            ]
+          }
+        }
       ],
       "additionalProperties": false
     }
