@@ -17,6 +17,17 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "i0c.cc 配置控制台",
   description: "通过 WebUI 管理 redirects.json",
+  robots: {
+    index: false,
+    follow: false,
+    nocache: true,
+    googleBot: {
+      index: false,
+      follow: false,
+      noimageindex: true,
+      nocache: true,
+    },
+  },
 };
 
 export default function RootLayout({
