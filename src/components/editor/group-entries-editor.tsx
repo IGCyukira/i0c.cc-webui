@@ -60,24 +60,8 @@ export function GroupEntriesEditor({
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <p className="text-sm font-medium text-slate-900">这个分组还没有规则</p>
-                <p className="mt-1 text-sm text-slate-500">点击右侧按钮新建一条规则</p>
+                <p className="mt-1 text-sm text-slate-500">点击右上角按钮新建一条规则</p>
               </div>
-              <button
-                type="button"
-                onClick={() => onAddEntry(group.id)}
-                className="inline-flex items-center justify-center gap-1 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-700 hover:bg-white"
-              >
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  className="h-4 w-4"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path d="M12 6v12m6-6H6" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-                新增规则
-              </button>
             </div>
           </div>
         ) : null}
