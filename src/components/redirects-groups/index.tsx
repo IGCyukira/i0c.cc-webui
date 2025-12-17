@@ -4,7 +4,7 @@ import { useCallback, useMemo } from "react";
 
 import { GroupTree, Sidebar } from "@/components/ui/sidebar";
 import { ContentSkeleton, SidebarSkeletonBody, SidebarSkeletonFooter } from "@/components/ui/skeletons";
-import { GroupEntriesEditor } from "@/components/redirects-groups/group-entries-editor";
+import { GroupEntriesEditor } from "@/components/editor/group-entries-editor";
 import { useRedirectsGroups } from "@/components/redirects-groups/use-redirects-groups";
 
 export type RedirectsGroupsManagerProps = {
