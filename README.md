@@ -20,7 +20,7 @@ i0c.cc WebUI 是一个基于 Next.js 16 的管理面板，用于通过 GitHub OA
 		Copy-Item .env.example .env.local
 		```
 
-2. 在 GitHub 创建 OAuth App，回调地址填写 `http://localhost:3000/api/auth/callback/github`，然后将 `Client ID`、`Client Secret` 写入 `.env.local` 的 `GITHUB_CLIENT_ID`、`GITHUB_CLIENT_SECRET`。
+2. 在 GitHub 创建 OAuth App，回调地址填写 `http(s)://<localhost:3000 或 你的域名>/api/auth/callback/github`，然后将 `Client ID`、`Client Secret` 写入 `.env.local` 的 `GITHUB_CLIENT_ID`、`GITHUB_CLIENT_SECRET`。如果是部署在 ▲ Vercel，将配置写到环境变量便好。
 
 3. 设置目标仓库信息（默认为 `IGCyukira/i0c.cc` 的 `data` 分支，可根据需要修改以下变量）：
 
@@ -31,7 +31,7 @@ i0c.cc WebUI 是一个基于 Next.js 16 的管理面板，用于通过 GitHub OA
 	GITHUB_CONFIG_PATH="redirects.json"
 	```
 
-4. 生成 `NEXTAUTH_SECRET` 并写入 `.env.local`。开发环境可将 `NEXTAUTH_URL` 设为 `http://localhost:3000`。
+4. 生成 `NEXTAUTH_SECRET` 并写入 `.env.local`。生产环境将 `NEXTAUTH_URL` 设为 `https://你的域名`，开发环境可将 `NEXTAUTH_URL` 设为 `http://localhost:3000`。
 
 	- 使用 OpenSSL：
 		```bash
@@ -49,7 +49,7 @@ i0c.cc WebUI 是一个基于 Next.js 16 的管理面板，用于通过 GitHub OA
 	npm run dev
 	```
 
-6. 打开 [http://localhost:3000](http://localhost:3000)，使用拥有仓库写入权限的 GitHub 账号登录后即可编辑 `redirects.json`。
+6. 打开 [http://localhost:3000](http://localhost:3000) 或 **你的域名**，使用拥有仓库写入权限的 GitHub 账号登录后即可编辑 `redirects.json`。
 
 ## 功能概览
 
