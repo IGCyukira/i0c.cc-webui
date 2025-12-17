@@ -2,7 +2,7 @@
 
 import type { RedirectGroup } from "@/lib/redirects-groups/model";
 
-import { RouteEntryEditor } from "@/components/ui/redirects-groups/route-entry-editor";
+import { RouteEntryEditor } from "@/components/redirects-groups/route-entry-editor";
 
 export type GroupEntriesEditorProps = {
   group: RedirectGroup;
@@ -23,15 +23,33 @@ export function GroupEntriesEditor({
     <div>
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="min-w-0">
-          <h1 className="text-lg font-semibold text-slate-900">{group.name}</h1>
+          <div className="flex items-center gap-2">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              className="h-6 w-6 text-slate-400"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path
+                d="M3 7a2 2 0 0 1 2-2h6l2 2h6a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            <h1 className="text-lg font-semibold text-slate-900">{group.name}</h1>
+          </div>
           <p className="mt-1 text-sm text-slate-500">编辑该分组内的 redirects 规则</p>
         </div>
 
         <button
           type="button"
           onClick={() => onAddEntry(group.id)}
-          className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50"
+          className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50"
         >
+          <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4" stroke="currentColor" strokeWidth="2">
+            <path d="M12 6v12m6-6H6" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
           新增规则
         </button>
       </div>
@@ -52,7 +70,11 @@ export function GroupEntriesEditor({
 
               <button
                 type="button"
-                onClick={() => onRemoveEntry(group.id, entry.id)}
+                onClick={() => {
+                  if (window.confirm("确定要删除这条规则吗？")) {
+                    onRemoveEntry(group.id, entry.id);
+                  }
+                }}
                 className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-rose-600 hover:bg-rose-50"
                 title="删除规则"
                 aria-label="删除规则"

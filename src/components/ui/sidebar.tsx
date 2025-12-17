@@ -80,25 +80,40 @@ export function GroupTree({
               className="min-w-0 flex-1 text-left text-sm font-medium text-slate-700"
               title={label}
             >
-              {isEditing ? (
-                <input
-                  value={editingName}
-                  onChange={(event) => onEditingNameChange(event.target.value)}
-                  onKeyDown={(event) => {
-                    if (event.key === "Enter") {
-                      onCommitRenameGroup(group.id);
-                    }
-                    if (event.key === "Escape") {
-                      onCancelRename();
-                    }
-                  }}
-                  onBlur={() => onCommitRenameGroup(group.id)}
-                  autoFocus
-                  className="w-full rounded-lg border border-slate-200 bg-white px-2 py-1 text-sm focus:border-blue-500 focus:outline-none"
-                />
-              ) : (
-                <span className="block truncate">{label}</span>
-              )}
+              <span className="flex min-w-0 items-center gap-2">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  className="h-4 w-4 shrink-0 text-slate-500"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path
+                    d="M3 7a2 2 0 0 1 2-2h6l2 2h6a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                {isEditing ? (
+                  <input
+                    value={editingName}
+                    onChange={(event) => onEditingNameChange(event.target.value)}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter") {
+                        onCommitRenameGroup(group.id);
+                      }
+                      if (event.key === "Escape") {
+                        onCancelRename();
+                      }
+                    }}
+                    onBlur={() => onCommitRenameGroup(group.id)}
+                    autoFocus
+                    className="min-w-0 flex-1 rounded-lg border border-slate-200 bg-white px-2 py-1 text-sm focus:border-blue-500 focus:outline-none"
+                  />
+                ) : (
+                  <span className="block min-w-0 flex-1 truncate">{label}</span>
+                )}
+              </span>
             </button>
 
             <div className="flex gap-1">

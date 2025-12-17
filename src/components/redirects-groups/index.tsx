@@ -3,8 +3,9 @@
 import { useCallback, useMemo } from "react";
 
 import { GroupTree, Sidebar } from "@/components/ui/sidebar";
-import { GroupEntriesEditor } from "@/components/ui/redirects-groups/group-entries-editor";
-import { useRedirectsGroups } from "@/components/ui/redirects-groups/use-redirects-groups";
+import { ContentSkeleton, SidebarSkeletonBody, SidebarSkeletonFooter } from "@/components/ui/skeletons";
+import { GroupEntriesEditor } from "@/components/redirects-groups/group-entries-editor";
+import { useRedirectsGroups } from "@/components/redirects-groups/use-redirects-groups";
 
 export type RedirectsGroupsManagerProps = {
   mobileSidebarOpen?: boolean;
@@ -93,15 +94,44 @@ export function RedirectsGroupsManager({
     () => (
       <>
         <div className="flex items-center justify-between gap-2">
-          <span className="text-xs font-medium text-slate-500">{slotsKey}</span>
+          <h2 className="text-sm font-semibold text-slate-900">分组管理</h2>
           <button
             type="button"
             onClick={() => addGroup(rootGroup.id)}
-            className="rounded-lg border border-slate-200 bg-white px-2 py-1 text-xs text-slate-600 hover:bg-slate-50"
+            className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2 py-1 text-xs text-slate-600 hover:bg-slate-50"
           >
+            <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5" stroke="currentColor" strokeWidth="2">
+              <path d="M12 6v12m6-6H6" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
             新增分组
           </button>
         </div>
+
+        <button
+          type="button"
+          onClick={() => handleSelectGroup(rootGroup.id)}
+          className={
+            "mt-3 flex w-full items-center justify-between gap-2 rounded-2xl border px-3 py-2 text-left " +
+            (selectedGroupId === rootGroup.id
+              ? "border-slate-300 bg-white text-slate-900"
+              : "border-slate-200 bg-slate-50 text-slate-700 hover:bg-white")
+          }
+          title="根目录（直接写在 slots 下的规则）"
+        >
+          <span className="inline-flex min-w-0 items-center gap-2">
+            <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4" stroke="currentColor" strokeWidth="2">
+              <path
+                d="M3 7a2 2 0 0 1 2-2h6l2 2h6a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            <span className="truncate text-sm font-medium">根目录</span>
+          </span>
+          <span className="shrink-0 rounded-lg border border-slate-200 bg-white px-2 py-0.5 text-xs text-slate-500">
+            {slotsKey}
+          </span>
+        </button>
 
         {rootGroup.children.length === 0 ? (
           <p className="mt-4 text-sm text-slate-500">暂无分组</p>
@@ -147,12 +177,17 @@ export function RedirectsGroupsManager({
     return (
       <div className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-10 sm:flex-row">
         <div className="hidden sm:block order-1 w-full sm:w-64 lg:w-80 shrink-0">
-          <Sidebar title="分组" footer={sidebarFooter}>
-            <div />
+          <Sidebar
+            footer={<SidebarSkeletonFooter />}
+            className="h-full"
+          >
+            <SidebarSkeletonBody />
           </Sidebar>
         </div>
         <section className="order-2 min-w-0 flex-1">
-          <div className="text-sm text-slate-500">加载中...</div>
+          <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-lg">
+            <ContentSkeleton />
+          </div>
         </section>
       </div>
     );
@@ -162,7 +197,7 @@ export function RedirectsGroupsManager({
     return (
       <div className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-10 sm:flex-row">
         <div className="hidden sm:block order-1 w-full sm:w-64 lg:w-80 shrink-0">
-          <Sidebar title="分组" footer={sidebarFooter}>
+          <Sidebar title="分组" footer={sidebarFooter} className="h-full">
             <div className="text-sm text-slate-600">无法加载分组</div>
           </Sidebar>
         </div>
@@ -176,7 +211,7 @@ export function RedirectsGroupsManager({
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-10 sm:flex-row">
       <div className="hidden sm:block order-1 w-full sm:w-64 lg:w-80 shrink-0">
-        <Sidebar title="分组管理" footer={sidebarFooter}>
+        <Sidebar footer={sidebarFooter} className="h-full">
           {sidebarBody}
         </Sidebar>
       </div>
@@ -185,7 +220,7 @@ export function RedirectsGroupsManager({
         <div className="sm:hidden fixed inset-0 z-50 bg-slate-50">
           <div className="h-full overflow-y-auto px-6 py-6">
             <div className="mx-auto max-w-6xl space-y-6">
-              <Sidebar title="分组管理" footer={sidebarFooter}>
+              <Sidebar footer={sidebarFooter}>
                 {sidebarBody}
               </Sidebar>
               <button

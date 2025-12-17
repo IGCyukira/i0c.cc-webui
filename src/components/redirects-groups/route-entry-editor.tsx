@@ -298,7 +298,7 @@ export function RouteEntryEditor({ value, onChange, level = 0 }: RouteEntryEdito
         <div className="mt-4 grid grid-cols-1 gap-3">
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             <div>
-              <label className="block text-xs font-medium text-slate-600">type</label>
+              <label className="block text-xs font-medium text-slate-600">type（prefix前缀、exact精确、proxy反代）</label>
               <div className="mt-1">
                 <DropdownSelect
                   value={(configValue.type as string | undefined) ?? "prefix"}
@@ -321,13 +321,13 @@ export function RouteEntryEditor({ value, onChange, level = 0 }: RouteEntryEdito
                   onChange={(e) => onChange({ ...configValue, appendPath: e.target.checked })}
                   className="h-4 w-4 rounded border-slate-300 accent-slate-900"
                 />
-                <span className="text-sm text-slate-700">启用</span>
+                <span className="text-sm text-slate-700">拼接余下路径</span>
               </div>
             </div>
           </div>
 
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
-            <div className="sm:col-span-2">
+            <div className="sm:col-span-3">
               <label className="block text-xs font-medium text-slate-600">目标地址 （target、to、url作用都是一样的）</label>
               <div className="mt-1 flex gap-2">
                 <DropdownSelect
@@ -358,7 +358,7 @@ export function RouteEntryEditor({ value, onChange, level = 0 }: RouteEntryEdito
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-600">status</label>
+              <label className="block text-xs font-medium text-slate-600">status（重定向状态码）</label>
               <input
                 value={normalizeStatus(configValue.status)}
                 onChange={(e) => {
@@ -376,11 +376,9 @@ export function RouteEntryEditor({ value, onChange, level = 0 }: RouteEntryEdito
                 className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-slate-300"
               />
             </div>
-          </div>
 
-          <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
             <div>
-              <label className="block text-xs font-medium text-slate-600">priority</label>
+              <label className="block text-xs font-medium text-slate-600">priority（数字越小优先级越高）</label>
               <input
                 value={normalizePriority(configValue.priority)}
                 onChange={(e) => {

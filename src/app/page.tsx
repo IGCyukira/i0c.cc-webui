@@ -3,7 +3,7 @@ import type { Session } from "next-auth";
 
 import { SignInPanel } from "@/components/sign-in-panel";
 import { authOptions } from "@/auth/config";
-import { RedirectsGroupsPage } from "@/components/ui/redirects-groups/redirects-groups-page";
+import { RedirectsGroupsPage } from "@/components/redirects-groups/redirects-groups-page";
 
 type SessionWithToken = Session & { accessToken: string };
 

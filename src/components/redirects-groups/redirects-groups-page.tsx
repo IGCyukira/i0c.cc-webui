@@ -3,7 +3,7 @@
 import { useCallback, useState } from "react";
 
 import { AppHeader } from "@/components/ui/app-header";
-import { RedirectsGroupsManager } from "@/components/ui/redirects-groups";
+import { RedirectsGroupsManager } from "@/components/redirects-groups";
 
 export function RedirectsGroupsPage() {
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
