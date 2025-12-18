@@ -1,3 +1,5 @@
+<img src="https://raw.githubusercontent.com/IGCyukira/i0c.cc-webui/refs/heads/main/public/img/E617F59CDD7A58032DC2B01D78A97986.webp" alt="i0c.cc" width = "720">
+
 ## Project Overview
 
 i0c.cc WebUI is a management panel based on Next.js 16, designed for online editing of `redirects.json` after logging in via GitHub OAuth. When saving changes, it calls the GitHub Contents API to create commits on the specified branch of the target repository, preserving the history.
