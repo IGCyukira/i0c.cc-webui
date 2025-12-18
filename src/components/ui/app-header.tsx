@@ -1,7 +1,10 @@
 'use client';
 
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { signOut, useSession } from "next-auth/react";
+
+import { LanguageSwitcher } from "@/components/ui/language-switcher";
 
 export type AppHeaderProps = {
   mobileSidebarToggle?: {
@@ -11,8 +14,10 @@ export type AppHeaderProps = {
 };
 
 export function AppHeader({ mobileSidebarToggle }: AppHeaderProps) {
+  const t = useTranslations("header");
+
   const { data: session } = useSession();
-  const sidebarToggleLabel = mobileSidebarToggle?.isOpen ? "隐藏分组" : "展开分组";
+  const sidebarToggleLabel = mobileSidebarToggle?.isOpen ? t("hideGroups") : t("showGroups");
 
   return (
     <header className="sticky top-0 z-40 border-b-2 border-slate-200/70 bg-white/80 backdrop-blur shadow-md rounded-b-2xl">
@@ -56,7 +61,7 @@ export function AppHeader({ mobileSidebarToggle }: AppHeaderProps) {
             className="rounded-lg border-2 border-slate-200"
             priority
           />
-          <span className="truncate text-lg font-semibold text-slate-900">i0c.cc 控制台</span>
+          <span className="truncate text-lg font-semibold text-slate-900">{t("console")}</span>
           <span className="hidden sm:inline-flex h-5 items-center justify-center rounded-full border border-slate-200 bg-white px-2 text-[11px] font-medium leading-none text-slate-500">
             Beta
           </span>
@@ -67,22 +72,45 @@ export function AppHeader({ mobileSidebarToggle }: AppHeaderProps) {
             {session.user?.image ? (
               <Image
                 src={session.user.image}
-                alt={session.user.name ?? "GitHub 用户"}
+                alt={session.user.name ?? t("githubUser")}
                 width={28}
                 height={28}
                 className="rounded-full border border-slate-200"
               />
             ) : null}
             <span className="hidden sm:block max-w-[16rem] truncate text-sm text-slate-600">
-              {session.user?.name ?? session.user?.email ?? "已登录"}
+              {session.user?.name ?? session.user?.email ?? t("signedIn")}
             </span>
             <button
               type="button"
               onClick={() => signOut()}
-              className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 hover:bg-slate-50"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+              aria-label={t("signOut")}
+              title={t("signOut")}
             >
-              退出
+              <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4" aria-hidden="true">
+                <path
+                  d="M10 7V6a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-6a2 2 0 0 1-2-2v-1"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
+                <path
+                  d="M15 12H3"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
+                <path
+                  d="M6 9l-3 3 3 3"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
             </button>
+            <LanguageSwitcher />
           </div>
         ) : null}
       </div>

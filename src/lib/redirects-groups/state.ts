@@ -65,8 +65,13 @@ export function removeGroupById(group: RedirectGroup, id: string): [RedirectGrou
   return [{ ...group, children: nextChildren }, true];
 }
 
-export function ensureUniqueGroupName(parent: RedirectGroup, groupId: string | null, proposed: string): string {
-  const base = proposed.trim() || "新分组";
+export function ensureUniqueGroupName(
+  parent: RedirectGroup,
+  groupId: string | null,
+  proposed: string,
+  fallbackName = "New group"
+): string {
+  const base = proposed.trim() || fallbackName;
   const siblings = parent.children
     .filter((g) => (groupId ? g.id !== groupId : true))
     .map((g) => g.name.trim())

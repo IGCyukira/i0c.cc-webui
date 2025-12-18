@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState, useTransition } from "react";
+import { useTranslations } from "next-intl";
 
 import { fetchRedirectsConfig, saveRedirectsConfig } from "@/lib/redirects-groups/api";
 import type { RedirectGroup } from "@/lib/redirects-groups/model";
@@ -30,6 +31,8 @@ function cloneSnapshot(value: HistorySnapshot): HistorySnapshot {
 const MAX_HISTORY = 50;
 
 export function useRedirectsGroups() {
+  const tGroups = useTranslations("groups");
+
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
 
@@ -59,7 +62,9 @@ export function useRedirectsGroups() {
       setLastCommitUrl(null);
 
       try {
-        const data = await fetchRedirectsConfig();
+        const data = await fetchRedirectsConfig({
+          fallbackLoadErrorText: tGroups("loadFail"),
+        });
         const parsed = parseInitialContent(data.config.content);
 
         if (cancelled) {
@@ -78,7 +83,7 @@ export function useRedirectsGroups() {
         setSelectedGroupId(initialSelected);
       } catch (error) {
         if (!cancelled) {
-          setLoadError(error instanceof Error ? error.message : "加载配置失败");
+          setLoadError(error instanceof Error ? error.message : tGroups("loadFail"));
         }
       } finally {
         if (!cancelled) {
@@ -91,7 +96,7 @@ export function useRedirectsGroups() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [tGroups]);
 
   const canUndo = undoStack.length > 0;
   const canRedo = redoStack.length > 0;
@@ -186,7 +191,7 @@ export function useRedirectsGroups() {
         return;
       }
 
-      const nextName = ensureUniqueGroupName(parent, groupId, editingName);
+      const nextName = ensureUniqueGroupName(parent, groupId, editingName, tGroups("newGroup"));
       pushUndoSnapshot({ rootGroup, selectedGroupId });
       setRootGroup((current) => {
         const [updated] = updateGroupById(current, groupId, (group) => ({ ...group, name: nextName }));
@@ -195,7 +200,7 @@ export function useRedirectsGroups() {
 
       cancelRename();
     },
-    [cancelRename, editingName, pushUndoSnapshot, rootGroup, selectedGroupId]
+    [cancelRename, editingName, pushUndoSnapshot, rootGroup, selectedGroupId, tGroups]
   );
 
   const addGroup = useCallback((parentId: string) => {
@@ -206,7 +211,7 @@ export function useRedirectsGroups() {
         return current;
       }
 
-      const name = ensureUniqueGroupName(parent, null, "新分组");
+      const name = ensureUniqueGroupName(parent, null, tGroups("newGroup"), tGroups("newGroup"));
       const group = createEmptyGroup(name);
 
       const [updated] = updateGroupById(current, parentId, (g) => ({
@@ -220,7 +225,7 @@ export function useRedirectsGroups() {
 
       return updated;
     });
-  }, [pushUndoSnapshot, rootGroup, selectedGroupId]);
+  }, [pushUndoSnapshot, rootGroup, selectedGroupId, tGroups]);
 
   const addEntry = useCallback((groupId: string) => {
     pushUndoSnapshot({ rootGroup, selectedGroupId });
@@ -274,9 +279,9 @@ export function useRedirectsGroups() {
       }
 
       const target = findGroupById(rootGroup, groupId);
-      const label = target?.name?.trim() || "未命名分组";
+      const label = target?.name?.trim() || tGroups("unnamed");
 
-      const ok = window.confirm(`确认删除分组“${label}”？\n将同时删除其子分组与内部规则。`);
+      const ok = window.confirm(tGroups("confirmDelete", { label }));
       if (!ok) {
         return;
       }
@@ -301,7 +306,7 @@ export function useRedirectsGroups() {
       setEditingGroupId((prev) => (prev === groupId ? null : prev));
       setEditingName((prev) => (editingGroupId === groupId ? "" : prev));
     },
-    [editingGroupId, pushUndoSnapshot, rootGroup, selectedGroupId]
+    [editingGroupId, pushUndoSnapshot, rootGroup, selectedGroupId, tGroups]
   );
 
   const applyJson = useCallback(
@@ -330,29 +335,36 @@ export function useRedirectsGroups() {
       try {
         const config = buildConfig(rootGroup, baseConfig, slotsKey);
         const content = overrideContent ?? JSON.stringify(config, null, 2);
-        const result = await saveRedirectsConfig({
-          content,
-          sha,
-          message: "Update groups via WebUI"
-        });
+        const result = await saveRedirectsConfig(
+          {
+            content,
+            sha,
+            message: "Update groups via WebUI"
+          },
+          {
+            fallbackSaveErrorText: tGroups("saveFail")
+          }
+        );
 
         setSha(result.sha);
         setLastCommitUrl(result.commitUrl);
-        setResultMessage("保存成功");
+        setResultMessage(tGroups("saveOk"));
       } catch (error) {
-        setResultMessage(error instanceof Error ? error.message : "保存失败");
+        setResultMessage(error instanceof Error ? error.message : tGroups("saveFail"));
       }
     });
-  }, [baseConfig, rootGroup, sha, slotsKey, startTransition]);
+  }, [baseConfig, rootGroup, sha, slotsKey, startTransition, tGroups]);
 
   const previewJson = useMemo(() => {
     try {
       const config = buildConfig(rootGroup, baseConfig, slotsKey);
       return JSON.stringify(config, null, 2);
     } catch (error) {
-      return error instanceof Error ? `// 预览生成失败：${error.message}` : "// 预览生成失败";
+      return error instanceof Error
+        ? tGroups("previewFailWithMessage", { message: error.message })
+        : tGroups("previewFailUnknown");
     }
-  }, [baseConfig, rootGroup, slotsKey]);
+  }, [baseConfig, rootGroup, slotsKey, tGroups]);
 
   return {
     isLoading,

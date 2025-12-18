@@ -1,5 +1,7 @@
 'use client';
 
+import { useTranslations } from "next-intl";
+
 import type { RedirectGroup } from "@/lib/redirects-groups/model";
 
 import { RouteEntryEditor } from "@/components/editor/route-entry-editor";
@@ -19,6 +21,8 @@ export function GroupEntriesEditor({
   onUpdateEntryKey,
   onUpdateEntryValue,
 }: GroupEntriesEditorProps) {
+  const t = useTranslations("entries");
+
   return (
     <div>
       <div className="flex flex-wrap items-start justify-between gap-4">
@@ -39,7 +43,7 @@ export function GroupEntriesEditor({
             </svg>
             <h1 className="text-lg font-semibold text-slate-900">{group.name}</h1>
           </div>
-          <p className="mt-1 text-sm text-slate-500">编辑该分组内的 redirects 规则</p>
+            <p className="mt-1 text-sm text-slate-500">{t("description")}</p>
         </div>
 
         <button
@@ -50,7 +54,7 @@ export function GroupEntriesEditor({
           <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4" stroke="currentColor" strokeWidth="2">
             <path d="M12 6v12m6-6H6" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
-          新增规则
+          {t("addRule")}
         </button>
       </div>
 
@@ -59,8 +63,8 @@ export function GroupEntriesEditor({
           <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 p-6">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <p className="text-sm font-medium text-slate-900">这个分组还没有规则</p>
-                <p className="mt-1 text-sm text-slate-500">点击按钮新建一条规则</p>
+                <p className="text-sm font-medium text-slate-900">{t("emptyTitle")}</p>
+                <p className="mt-1 text-sm text-slate-500">{t("emptyHint")}</p>
               </div>
             </div>
           </div>
@@ -69,11 +73,11 @@ export function GroupEntriesEditor({
           <div key={entry.id} className="rounded-2xl border border-slate-200 bg-white p-5">
             <div className="flex items-end gap-3">
               <div className="min-w-0 flex-1">
-                <label className="block text-xs font-medium text-slate-600">Path key</label>
+                <label className="block text-xs font-medium text-slate-600">{t("pathKey")}</label>
                 <input
                   value={entry.key}
                   onChange={(e) => onUpdateEntryKey(group.id, entry.id, e.target.value)}
-                  placeholder="/foo 或 /bar/baz"
+                  placeholder={t("pathKeyPlaceholder")}
                   className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-slate-300"
                 />
               </div>
@@ -81,13 +85,13 @@ export function GroupEntriesEditor({
               <button
                 type="button"
                 onClick={() => {
-                  if (window.confirm("确定要删除这条规则吗？")) {
+                  if (window.confirm(t("confirmDeleteRule"))) {
                     onRemoveEntry(group.id, entry.id);
                   }
                 }}
                 className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-rose-600 hover:bg-rose-50"
-                title="删除规则"
-                aria-label="删除规则"
+                title={t("deleteRule")}
+                aria-label={t("deleteRule")}
               >
                 <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4" stroke="currentColor" strokeWidth="2">
                   <path

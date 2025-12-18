@@ -1,6 +1,7 @@
 'use client';
 
 import type { ReactNode } from "react";
+import { useTranslations } from "next-intl";
 
 import type { RedirectGroup } from "@/lib/redirects-groups/model";
 
@@ -59,11 +60,13 @@ export function GroupTree({
   onCancelRename,
   onRemoveGroup,
 }: GroupTreeProps) {
+  const t = useTranslations("groups");
+
   const render = (items: RedirectGroup[], depth: number): ReactNode =>
     items.map((group) => {
       const selected = group.id === selectedGroupId;
       const isEditing = group.id === editingGroupId;
-      const label = group.name.trim() || "未命名分组";
+      const label = group.name.trim() || t("unnamed");
       const canNest = depth < MAX_GROUP_DEPTH - 1;
 
       return (
@@ -127,7 +130,7 @@ export function GroupTree({
                     ? "border-slate-200 text-slate-600 hover:bg-slate-50"
                     : "border-slate-200 text-slate-300 cursor-not-allowed")
                 }
-                title={canNest ? "新增子分组" : `建议最多 ${MAX_GROUP_DEPTH} 层`}
+                title={canNest ? t("addChild") : t("maxDepthHint", { count: MAX_GROUP_DEPTH })}
               >
                 <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5" stroke="currentColor" strokeWidth="2">
                   <path d="M12 6v12m6-6H6" strokeLinecap="round" strokeLinejoin="round" />
@@ -137,7 +140,7 @@ export function GroupTree({
                 type="button"
                 onClick={() => onBeginRenameGroup(group.id)}
                 className="flex h-6 w-6 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
-                title="重命名"
+                title={t("rename")}
               >
                 <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5" stroke="currentColor" strokeWidth="2">
                   <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" strokeLinecap="round" strokeLinejoin="round" />
@@ -148,7 +151,7 @@ export function GroupTree({
                 type="button"
                 onClick={() => onRemoveGroup(group.id)}
                 className="flex h-6 w-6 items-center justify-center rounded-lg border border-slate-200 bg-white text-rose-600 hover:bg-rose-50"
-                title="删除"
+                title={t("delete")}
               >
                 <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5" stroke="currentColor" strokeWidth="2">
                   <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M10 11v6M14 11v6" strokeLinecap="round" strokeLinejoin="round" />

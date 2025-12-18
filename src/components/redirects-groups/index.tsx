@@ -2,6 +2,7 @@
  'use client';
 
 import { useCallback, useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 
 import { GroupTree, Sidebar } from "@/components/ui/sidebar";
 import { ContentSkeleton, SidebarSkeletonBody, SidebarSkeletonFooter } from "@/components/ui/skeletons";
@@ -18,6 +19,10 @@ export function RedirectsGroupsManager({
   mobileSidebarOpen,
   onMobileSidebarOpenChange,
 }: RedirectsGroupsManagerProps) {
+  const tGroups = useTranslations("groups");
+  const tEditor = useTranslations("editor");
+  const tCommon = useTranslations("common");
+
   const {
     isLoading,
     loadError,
@@ -73,13 +78,13 @@ export function RedirectsGroupsManager({
         applyJson(normalized);
         save(normalized);
       } catch (error) {
-        setJsonError(error instanceof Error ? error.message : "JSON 解析失败");
+        setJsonError(error instanceof Error ? error.message : tEditor("jsonParseFail"));
       }
       return;
     }
 
     save();
-  }, [applyJson, editorMode, jsonDraft, save]);
+  }, [applyJson, editorMode, jsonDraft, save, tEditor]);
 
   const closeMobileSidebar = useCallback(() => {
     onMobileSidebarOpenChange?.(false);
@@ -104,14 +109,14 @@ export function RedirectsGroupsManager({
             onClick={undo}
             disabled={!canUndo || isPending}
             className="inline-flex h-9 w-full items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-3 text-xs font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
-            title="撤回"
-            aria-label="撤回"
+            title={tGroups("undo")}
+            aria-label={tGroups("undo")}
           >
             <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4" stroke="currentColor" strokeWidth="2">
               <path d="M9 14l-4-4 4-4" strokeLinecap="round" strokeLinejoin="round" />
               <path d="M20 20a8 8 0 0 0-8-8H5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
-            撤回
+            {tGroups("undo")}
           </button>
 
           <button
@@ -119,14 +124,14 @@ export function RedirectsGroupsManager({
             onClick={redo}
             disabled={!canRedo || isPending}
             className="inline-flex h-9 w-full items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-3 text-xs font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
-            title="恢复"
-            aria-label="恢复"
+            title={tGroups("redo")}
+            aria-label={tGroups("redo")}
           >
             <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4" stroke="currentColor" strokeWidth="2">
               <path d="M15 6l4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
               <path d="M4 20a8 8 0 0 1 8-8h7" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
-            恢复
+            {tGroups("redo")}
           </button>
         </div>
 
@@ -136,21 +141,21 @@ export function RedirectsGroupsManager({
           disabled={isPending}
           className="w-full rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400"
         >
-          {isPending ? "保存中..." : "保存改动"}
+          {isPending ? tGroups("saving") : tGroups("save")}
         </button>
         {resultMessage ? (
           <p className="text-sm text-slate-600 whitespace-pre-wrap break-words">
             {resultMessage}
             {lastCommitUrl ? (
               <>
-                ，
+                ,
                 <a
                   href={lastCommitUrl}
                   target="_blank"
                   rel="noreferrer"
                   className="inline-flex max-w-full break-all text-blue-600 underline hover:text-blue-500"
                 >
-                  查看提交
+                  {tGroups("viewCommit")}
                 </a>
               </>
             ) : null}
@@ -158,7 +163,7 @@ export function RedirectsGroupsManager({
         ) : null}
       </div>
     ),
-    [canRedo, canUndo, handleSave, isPending, lastCommitUrl, redo, resultMessage, undo]
+    [canRedo, canUndo, handleSave, isPending, lastCommitUrl, redo, resultMessage, tGroups, undo]
   );
 
   const sidebarBody = useMemo(
@@ -166,7 +171,7 @@ export function RedirectsGroupsManager({
       <>
         <div className="sticky top-0 z-10 bg-white pb-3">
           <div className="flex items-center justify-between gap-2">
-            <h2 className="text-sm font-semibold text-slate-900">分组管理</h2>
+            <h2 className="text-sm font-semibold text-slate-900">{tGroups("manager")}</h2>
             <button
               type="button"
               onClick={() => addGroup(rootGroup.id)}
@@ -175,7 +180,7 @@ export function RedirectsGroupsManager({
               <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5" stroke="currentColor" strokeWidth="2">
                 <path d="M12 6v12m6-6H6" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
-              新增分组
+              {tGroups("addGroup")}
             </button>
           </div>
         </div>
@@ -189,7 +194,7 @@ export function RedirectsGroupsManager({
               ? "border-slate-300 bg-white text-slate-900"
               : "border-slate-200 bg-slate-50 text-slate-700 hover:bg-white")
           }
-          title="根目录（直接写在 slots 下的规则）"
+          title={tGroups("rootTitle")}
         >
           <span className="inline-flex min-w-0 items-center gap-2">
             <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4" stroke="currentColor" strokeWidth="2">
@@ -199,7 +204,7 @@ export function RedirectsGroupsManager({
                 strokeLinejoin="round"
               />
             </svg>
-            <span className="truncate text-sm font-medium">根目录</span>
+            <span className="truncate text-sm font-medium">{tGroups("root")}</span>
           </span>
           <span className="shrink-0 rounded-lg border border-slate-200 bg-white px-2 py-0.5 text-xs text-slate-500">
             {slotsKey}
@@ -207,7 +212,7 @@ export function RedirectsGroupsManager({
         </button>
 
         {rootGroup.children.length === 0 ? (
-          <p className="mt-4 text-sm text-slate-500">暂无分组</p>
+          <p className="mt-4 text-sm text-slate-500">{tGroups("empty")}</p>
         ) : (
           <div className="mt-4">
             <GroupTree
@@ -241,6 +246,7 @@ export function RedirectsGroupsManager({
       selectedGroupId,
       setEditingName,
       slotsKey,
+      tGroups,
     ]
   );
 
@@ -270,8 +276,8 @@ export function RedirectsGroupsManager({
     return (
       <div className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-10 sm:flex-row">
         <div className="hidden sm:block order-1 w-full sm:w-64 lg:w-80 shrink-0">
-          <Sidebar title="分组" footer={sidebarFooter} className="h-full">
-            <div className="text-sm text-slate-600">无法加载分组</div>
+          <Sidebar title={tGroups("group")} footer={sidebarFooter} className="h-full">
+            <div className="text-sm text-slate-600">{tGroups("cannotLoad")}</div>
           </Sidebar>
         </div>
         <section className="order-2 min-w-0 flex-1">
@@ -301,7 +307,7 @@ export function RedirectsGroupsManager({
                 onClick={closeMobileSidebar}
                 className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-lg hover:bg-slate-50"
               >
-                关闭
+                {tCommon("close")}
               </button>
             </div>
           </div>
@@ -327,8 +333,8 @@ export function RedirectsGroupsManager({
               />
             ) : (
               <div>
-                <h1 className="text-lg font-semibold text-slate-900">分组</h1>
-                <p className="mt-1 text-sm text-slate-500">从右侧选择分组</p>
+                <h1 className="text-lg font-semibold text-slate-900">{tGroups("group")}</h1>
+                <p className="mt-1 text-sm text-slate-500">{tGroups("selectHint")}</p>
               </div>
             )
           }

@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
+import { useTranslations } from "next-intl";
 
 import Ajv, { type AnySchema, type ValidateFunction } from "ajv";
 import addFormats from "ajv-formats";
@@ -27,6 +28,8 @@ export function RightPanel({
   jsonError,
   rulesContent,
 }: RightPanelProps) {
+  const t = useTranslations("editor");
+
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const [activeLine, setActiveLine] = useState(1);
 
@@ -58,10 +61,10 @@ export function RightPanel({
       JSON.parse(jsonDraft);
       return null;
     } catch (error) {
-      const message = error instanceof Error ? error.message : "未知错误";
-      return `JSON 格式错误：${message}`;
+      const message = error instanceof Error ? error.message : t("unknownError");
+      return t("jsonFormatError", { message });
     }
-  }, [editorMode, jsonDraft]);
+  }, [editorMode, jsonDraft, t]);
 
   useEffect(() => {
     if (editorMode !== "json") {
@@ -91,13 +94,13 @@ export function RightPanel({
           return ok as boolean;
         };
       } catch (error) {
-        const message = error instanceof Error ? error.message : "未知错误";
-        setSchemaLoadError(`Schema 加载失败：${message}`);
+        const message = error instanceof Error ? error.message : t("unknownError");
+        setSchemaLoadError(t("schemaLoadFail", { message }));
       } finally {
         schemaLoadingRef.current = false;
       }
     })();
-  }, [editorMode, schemaUrl]);
+  }, [editorMode, schemaUrl, t]);
 
   useEffect(() => {
     if (editorMode !== "json") {
@@ -140,7 +143,7 @@ export function RightPanel({
       | undefined;
 
     if (!errors || errors.length === 0) {
-      setSchemaValidationError("Schema 校验失败：未知错误");
+      setSchemaValidationError(t("schemaValidateFailUnknown"));
       return;
     }
 
@@ -148,9 +151,9 @@ export function RightPanel({
       const path = (item.instancePath || "(root)").trim() || "(root)";
       return `${path}: ${item.message ?? "invalid"}`;
     });
-    const more = errors.length > 5 ? `\n… 还有 ${errors.length - 5} 条` : "";
-    setSchemaValidationError(`Schema 校验失败：\n${shown.join("\n")}${more}`);
-  }, [editorMode, jsonDraft, jsonFormatError]);
+    const more = errors.length > 5 ? t("schemaValidateMore", { count: errors.length - 5 }) : "";
+    setSchemaValidationError(t("schemaValidateFail", { lines: shown.join("\n"), more }));
+  }, [editorMode, jsonDraft, jsonFormatError, t]);
 
   const updateActiveLineFromSelection = useCallback(() => {
     const element = textareaRef.current;
@@ -207,7 +210,7 @@ export function RightPanel({
               (editorMode === "rules" ? "bg-slate-900 text-white" : "text-slate-700 hover:bg-slate-50")
             }
           >
-            规则编辑
+            {t("rules")}
           </button>
           <button
             type="button"
@@ -217,10 +220,10 @@ export function RightPanel({
               (editorMode === "json" ? "bg-slate-900 text-white" : "text-slate-700 hover:bg-slate-50")
             }
           >
-            JSON 编辑
+            {t("json")}
           </button>
         </div>
-        <p className="text-xs text-slate-500">{editorMode === "json" ? "保存将以此 JSON 为准" : "编辑规则并保存"}</p>
+        <p className="text-xs text-slate-500">{editorMode === "json" ? t("jsonPreferred") : t("editAndSave")}</p>
       </div>
 
       {editorMode === "json" ? (
@@ -292,7 +295,7 @@ export function RightPanel({
               />
             </div>
           </div>
-          <p className="text-xs text-slate-500">提示：切回“规则编辑”后会以解析后的内容为准。</p>
+          <p className="text-xs text-slate-500">{t("tipParse")}</p>
         </div>
       ) : (
         rulesContent

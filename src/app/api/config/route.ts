@@ -36,8 +36,8 @@ export async function GET() {
 }
 
 const updateSchema = z.object({
-  content: z.string().min(2, { message: "配置内容不能为空" }),
-  sha: z.string().min(2, { message: "缺少配置版本信息" }),
+  content: z.string().min(2, { message: "Config content is required" }),
+  sha: z.string().min(2, { message: "Missing config version (sha)" }),
   message: z.string().min(1).max(200).optional()
 });
 

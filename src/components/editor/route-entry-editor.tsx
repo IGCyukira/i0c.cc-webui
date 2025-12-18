@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 
 type RouteMode = "string" | "object" | "array";
 type DestinationKey = "target" | "to" | "url";
@@ -177,6 +178,8 @@ export type RouteEntryEditorProps = {
 };
 
 export function RouteEntryEditor({ value, onChange, level = 0, allowArray = true }: RouteEntryEditorProps) {
+  const t = useTranslations("routeEntry");
+
   const mode = useMemo(() => getMode(value), [value]);
 
   const stringValue = mode === "string" ? asString(value) : "";
@@ -290,7 +293,7 @@ export function RouteEntryEditor({ value, onChange, level = 0, allowArray = true
   return (
     <div className={containerClassName}>
       <div className="space-y-2">
-        <span className="block text-xs font-medium text-slate-500">规则类型</span>
+        <span className="block text-xs font-medium text-slate-500">{t("ruleType")}</span>
 
         <div className="grid grid-cols-3 gap-2">
           <button
@@ -303,7 +306,7 @@ export function RouteEntryEditor({ value, onChange, level = 0, allowArray = true
                 : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50")
             }
           >
-            快速配置
+            {t("quick")}
             {mode === "string" ? (
               <svg
                 viewBox="0 0 24 24"
@@ -327,7 +330,7 @@ export function RouteEntryEditor({ value, onChange, level = 0, allowArray = true
                 : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50")
             }
           >
-            详细配置
+            {t("detail")}
             {mode === "object" ? (
               <svg
                 viewBox="0 0 24 24"
@@ -352,7 +355,7 @@ export function RouteEntryEditor({ value, onChange, level = 0, allowArray = true
                   : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50")
               }
             >
-              多条规则
+              {t("multi")}
               {mode === "array" ? (
                 <svg
                   viewBox="0 0 24 24"
@@ -373,11 +376,11 @@ export function RouteEntryEditor({ value, onChange, level = 0, allowArray = true
 
       {mode === "string" ? (
         <div className="mt-3">
-          <label className="block text-xs font-medium text-slate-600">目标地址</label>
+          <label className="block text-xs font-medium text-slate-600">{t("target")}</label>
           <input
             value={stringValue}
             onChange={(e) => onChange(e.target.value)}
-            placeholder="https://example.com 或 /path"
+            placeholder={t("targetPlaceholder")}
             className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-slate-300"
           />
         </div>
@@ -387,18 +390,18 @@ export function RouteEntryEditor({ value, onChange, level = 0, allowArray = true
         <div className="mt-4 space-y-3">
           {arrayValue.length === 0 ? (
             <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 p-4">
-              <p className="text-sm text-slate-600">还没有规则项，点击下方按钮添加。</p>
+              <p className="text-sm text-slate-600">{t("noRuleItems")}</p>
             </div>
           ) : null}
 
           {arrayValue.map((item, index) => (
             <div key={index} className="rounded-2xl border border-slate-200 bg-white p-4">
               <div className="flex items-center justify-between gap-3">
-                <p className="text-xs font-medium text-slate-500">规则项 {index + 1}</p>
+                <p className="text-xs font-medium text-slate-500">{t("ruleItem", { index: index + 1 })}</p>
                 <button
                   type="button"
                   onClick={() => {
-                    if (!window.confirm("确定要删除这条规则吗？")) {
+                    if (!window.confirm(t("confirmDeleteRule"))) {
                       return;
                     }
 
@@ -413,8 +416,8 @@ export function RouteEntryEditor({ value, onChange, level = 0, allowArray = true
                     onChange(next);
                   }}
                   className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-rose-600 hover:bg-rose-50"
-                  title="删除规则"
-                  aria-label="删除规则"
+                  title={t("deleteRule")}
+                  aria-label={t("deleteRule")}
                 >
                   <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4" stroke="currentColor" strokeWidth="2">
                     <path
@@ -452,7 +455,7 @@ export function RouteEntryEditor({ value, onChange, level = 0, allowArray = true
             <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4" stroke="currentColor" strokeWidth="2">
               <path d="M12 6v12m6-6H6" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
-            新增规则项
+            {t("addRuleItem")}
           </button>
         </div>
       ) : null}
@@ -473,7 +476,7 @@ export function RouteEntryEditor({ value, onChange, level = 0, allowArray = true
               <>
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             <div>
-              <label className="block text-xs font-medium text-slate-600">type（prefix前缀、exact精确、proxy反代）</label>
+              <label className="block text-xs font-medium text-slate-600">{t("typeHelp")}</label>
               <div className="mt-1">
                 <DropdownSelect
                   value={(configValue.type as string | undefined) ?? "prefix"}
@@ -506,7 +509,7 @@ export function RouteEntryEditor({ value, onChange, level = 0, allowArray = true
                     onChange={(e) => onChange({ ...configValue, appendPath: e.target.checked })}
                     className="h-4 w-4 rounded border-slate-300 accent-slate-900"
                   />
-                  <span className="text-sm text-slate-700">拼接余下路径</span>
+                  <span className="text-sm text-slate-700">{t("appendPathHint")}</span>
                 </div>
               </div>
             ) : null}
@@ -514,7 +517,7 @@ export function RouteEntryEditor({ value, onChange, level = 0, allowArray = true
 
           <div className={"grid grid-cols-1 gap-2 " + (detailCols === 3 ? "sm:grid-cols-3" : "sm:grid-cols-2")}>
             <div className={detailCols === 3 ? "sm:col-span-3" : "sm:col-span-2"}>
-              <label className="block text-xs font-medium text-slate-600">目标地址 （target、to、url作用都是一样的）</label>
+              <label className="block text-xs font-medium text-slate-600">{t("targetHelp")}</label>
               <div className="mt-1 flex gap-2">
                 <DropdownSelect
                   className="w-28 shrink-0"
@@ -545,7 +548,7 @@ export function RouteEntryEditor({ value, onChange, level = 0, allowArray = true
 
             {showStatus ? (
               <div>
-                <label className="block text-xs font-medium text-slate-600">status（重定向状态码）</label>
+                <label className="block text-xs font-medium text-slate-600">{t("statusHelp")}</label>
                 <input
                   value={statusValue}
                   onChange={(e) => {
@@ -566,13 +569,13 @@ export function RouteEntryEditor({ value, onChange, level = 0, allowArray = true
                   }
                 />
                 {statusInvalid ? (
-                  <p className="mt-1 text-xs text-rose-600">需为 3 位数字（例如 301、302）。</p>
+                  <p className="mt-1 text-xs text-rose-600">{t("statusInvalid")}</p>
                 ) : null}
               </div>
             ) : null}
 
             <div>
-              <label className="block text-xs font-medium text-slate-600">priority（数字越小优先级越高）</label>
+              <label className="block text-xs font-medium text-slate-600">{t("priorityHelp")}</label>
               <input
                 value={priorityValue}
                 onChange={(e) => {
@@ -593,7 +596,7 @@ export function RouteEntryEditor({ value, onChange, level = 0, allowArray = true
                 }
               />
               {priorityInvalid ? (
-                <p className="mt-1 text-xs text-rose-600">需为整数（例如 0、10、-1）。</p>
+                <p className="mt-1 text-xs text-rose-600">{t("priorityInvalid")}</p>
               ) : null}
             </div>
           </div>

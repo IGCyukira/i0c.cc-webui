@@ -62,12 +62,12 @@ function normalizeGitHubErrorBody(status: number, rawBody: string): string {
     const json = JSON.parse(trimmed) as { message?: string; documentation_url?: string; status?: string | number };
     const message = typeof json?.message === "string" ? json.message : trimmed;
     if (status === 404) {
-      return `${message}（可能是仓库/分支/文件路径不存在，或当前账号无写入权限）`;
+      return `${message} (repo/branch/path not found, or the current account lacks write permission)`;
     }
     return message;
   } catch {
     if (status === 404) {
-      return `${trimmed}（可能是仓库/分支/文件路径不存在，或当前账号无写入权限）`;
+      return `${trimmed} (repo/branch/path not found, or the current account lacks write permission)`;
     }
     return trimmed;
   }

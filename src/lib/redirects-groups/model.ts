@@ -32,6 +32,6 @@ export function createEmptyEntry(): RedirectEntry {
   return { id: uniqueId(), key: '', value: '' };
 }
 
-export function createEmptyGroup(name = '新分组'): RedirectGroup {
+export function createEmptyGroup(name = 'New group'): RedirectGroup {
   return { id: uniqueId(), name, entries: [createEmptyEntry()], children: [] };
 }
