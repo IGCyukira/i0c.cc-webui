@@ -20,7 +20,7 @@ export function AppHeader({ mobileSidebarToggle }: AppHeaderProps) {
   const sidebarToggleLabel = mobileSidebarToggle?.isOpen ? t("hideGroups") : t("showGroups");
 
   return (
-    <header className="sticky top-0 z-40 border-b-2 border-slate-200/70 bg-white/80 backdrop-blur shadow-md rounded-b-2xl">
+    <header className="sticky top-0 z-1000 border-b-2 border-slate-200/70 bg-white/80 backdrop-blur shadow-md rounded-b-2xl">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6 sm:py-5">
         <div className="flex min-w-0 items-center gap-3">
           {mobileSidebarToggle ? (
