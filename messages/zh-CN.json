@@ -103,6 +103,7 @@
     "faviconAlt": "网站图标",
     "faviconLabel": "Favicon 图标",
     "showFavicon": "显示图标",
-    "hideFavicon": "隐藏图标"
+    "hideFavicon": "隐藏图标",
+    "download": "保存图片"
   }
 }

@@ -103,6 +103,7 @@
     "faviconAlt": "Favicon",
     "faviconLabel": "Favicon Logo",
     "showFavicon": "Show favicon",
-    "hideFavicon": "Hide favicon"
+    "hideFavicon": "Hide favicon",
+    "download": "Download QR code"
   }
 }
