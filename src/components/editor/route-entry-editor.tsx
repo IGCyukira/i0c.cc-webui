@@ -3,6 +3,36 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 
+function LabelWithTooltip({ label, tooltip }: { label: string; tooltip: string }) {
+  return (
+    <div className="flex items-center gap-1.5 mb-1.5">
+      <span className="text-xs font-medium text-slate-600">{label}</span>
+      <div className="group relative flex items-center">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="h-3.5 w-3.5 text-slate-400 cursor-help transition-colors hover:text-slate-600"
+        >
+          <circle cx="12" cy="12" r="10" />
+          <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+          <path d="M12 17h.01" />
+        </svg>
+        <div className="pointer-events-none absolute bottom-full left-1/2 mb-2 w-48 -translate-x-1/2 opacity-0 transform scale-95 transition-all duration-200 group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto z-50">
+          <div className="relative rounded-lg bg-slate-800 px-3 py-2 text-xs text-white shadow-xl leading-relaxed whitespace-pre-wrap text-center">
+            {tooltip}
+            <div className="absolute top-full left-1/2 -mt-1 -ml-1 h-2 w-2 border-4 border-transparent border-t-slate-800"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 type RouteMode = "string" | "object" | "array";
 type DestinationKey = "target" | "to" | "url";
 
@@ -27,29 +57,19 @@ function DropdownSelect({
   const selected = options.find((option) => option.value === value);
 
   useEffect(() => {
-    if (!open) {
-      return;
-    }
-
+    if (!open) return;
     const onMouseDown = (event: MouseEvent) => {
       const target = event.target;
-      if (!(target instanceof Node)) {
-        return;
-      }
+      if (!(target instanceof Node)) return;
       if (rootRef.current && !rootRef.current.contains(target)) {
         setOpen(false);
       }
     };
-
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setOpen(false);
-      }
+      if (event.key === "Escape") setOpen(false);
     };
-
     document.addEventListener("mousedown", onMouseDown);
     document.addEventListener("keydown", onKeyDown);
-
     return () => {
       document.removeEventListener("mousedown", onMouseDown);
       document.removeEventListener("keydown", onKeyDown);
@@ -129,12 +149,8 @@ function normalizePriority(value: unknown): string {
 }
 
 function getMode(value: unknown): RouteMode {
-  if (Array.isArray(value)) {
-    return "array";
-  }
-  if (isRecord(value)) {
-    return "object";
-  }
+  if (Array.isArray(value)) return "array";
+  if (isRecord(value)) return "object";
   return "string";
 }
 
@@ -143,15 +159,9 @@ function createEmptyConfig(): Record<string, unknown> {
 }
 
 function getDestinationKey(config: Record<string, unknown>): DestinationKey {
-  if (typeof config.target === "string") {
-    return "target";
-  }
-  if (typeof config.to === "string") {
-    return "to";
-  }
-  if (typeof config.url === "string") {
-    return "url";
-  }
+  if (typeof config.target === "string") return "target";
+  if (typeof config.to === "string") return "to";
+  if (typeof config.url === "string") return "url";
   return "target";
 }
 
@@ -161,11 +171,9 @@ function setExclusiveDestination(
   value: string
 ): Record<string, unknown> {
   const next: Record<string, unknown> = { ...config };
-
   delete next.target;
   delete next.to;
   delete next.url;
-
   next[key] = value;
   return next;
 }
@@ -191,28 +199,20 @@ export function RouteEntryEditor({ value, onChange, level = 0, allowArray = true
   const arrayDraftRef = useRef<unknown[] | null>(arrayValue);
 
   useEffect(() => {
-    if (mode === "string") {
-      stringDraftRef.current = stringValue;
-    }
+    if (mode === "string") stringDraftRef.current = stringValue;
   }, [mode, stringValue]);
 
   useEffect(() => {
-    if (mode === "object" && configValue) {
-      objectDraftRef.current = configValue;
-    }
+    if (mode === "object" && configValue) objectDraftRef.current = configValue;
   }, [configValue, mode]);
 
   useEffect(() => {
-    if (mode === "array" && arrayValue) {
-      arrayDraftRef.current = arrayValue;
-    }
+    if (mode === "array" && arrayValue) arrayDraftRef.current = arrayValue;
   }, [arrayValue, mode]);
 
   const setMode = useCallback(
     (nextMode: RouteMode) => {
-      if (nextMode === mode) {
-        return;
-      }
+      if (nextMode === mode) return;
       if (nextMode === "string") {
         const cached = stringDraftRef.current;
         if (cached.trim() !== "") {
@@ -243,7 +243,6 @@ export function RouteEntryEditor({ value, onChange, level = 0, allowArray = true
           onChange(cached);
           return;
         }
-
         if (arrayValue && arrayValue.length > 0) {
           const first = arrayValue[0];
           if (isRecord(first)) {
@@ -256,7 +255,6 @@ export function RouteEntryEditor({ value, onChange, level = 0, allowArray = true
           onChange(seededConfig);
           return;
         }
-
         const seed = createEmptyConfig();
         const seededConfig =
           stringValue.trim() === "" ? seed : setExclusiveDestination(seed, "target", stringValue.trim());
@@ -376,12 +374,12 @@ export function RouteEntryEditor({ value, onChange, level = 0, allowArray = true
 
       {mode === "string" ? (
         <div className="mt-3">
-          <label className="block text-xs font-medium text-slate-600">{t("target")}</label>
+          <LabelWithTooltip label={t("targetLabel")} tooltip={t("targetTooltip")} />
           <input
             value={stringValue}
             onChange={(e) => onChange(e.target.value)}
             placeholder={t("targetPlaceholder")}
-            className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-slate-300"
+            className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-slate-300"
           />
         </div>
       ) : null}
@@ -401,23 +399,18 @@ export function RouteEntryEditor({ value, onChange, level = 0, allowArray = true
                 <button
                   type="button"
                   onClick={() => {
-                    if (!window.confirm(t("confirmDeleteRule"))) {
-                      return;
-                    }
-
+                    if (!window.confirm(t("confirmDeleteRule"))) return;
                     const next = arrayValue.slice();
                     if (next.length <= 1) {
                       next[0] = "";
                       onChange(next);
                       return;
                     }
-
                     next.splice(index, 1);
                     onChange(next);
                   }}
                   className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-rose-600 hover:bg-rose-50"
                   title={t("deleteRule")}
-                  aria-label={t("deleteRule")}
                 >
                   <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4" stroke="currentColor" strokeWidth="2">
                     <path
@@ -430,7 +423,6 @@ export function RouteEntryEditor({ value, onChange, level = 0, allowArray = true
                   </svg>
                 </button>
               </div>
-
               <div className="mt-3">
                 <RouteEntryEditor
                   value={Array.isArray(item) ? "" : item}
@@ -474,140 +466,127 @@ export function RouteEntryEditor({ value, onChange, level = 0, allowArray = true
 
             return (
               <>
-          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-            <div>
-              <label className="block text-xs font-medium text-slate-600">{t("typeHelp")}</label>
-              <div className="mt-1">
-                <DropdownSelect
-                  value={(configValue.type as string | undefined) ?? "prefix"}
-                  onChange={(next) => {
-                    const nextConfig: Record<string, unknown> = { ...configValue, type: next };
-                    if (next === "proxy") {
-                      delete nextConfig.status;
-                    }
-                    if (next === "exact") {
-                      delete nextConfig.appendPath;
-                    }
-                    onChange(nextConfig);
-                  }}
-                  options={[
-                    { value: "prefix", label: "prefix" },
-                    { value: "exact", label: "exact" },
-                    { value: "proxy", label: "proxy" },
-                  ]}
-                />
-              </div>
-            </div>
+                <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                  <div>
+                    <LabelWithTooltip label={t("typeLabel")} tooltip={t("typeTooltip")} />
+                    <DropdownSelect
+                      value={(configValue.type as string | undefined) ?? "prefix"}
+                      onChange={(next) => {
+                        const nextConfig: Record<string, unknown> = { ...configValue, type: next };
+                        if (next === "proxy") delete nextConfig.status;
+                        if (next === "exact") delete nextConfig.appendPath;
+                        onChange(nextConfig);
+                      }}
+                      options={[
+                        { value: "prefix", label: "prefix" },
+                        { value: "exact", label: "exact" },
+                        { value: "proxy", label: "proxy" },
+                      ]}
+                    />
+                  </div>
 
-            {showAppendPath ? (
-              <div>
-                <label className="block text-xs font-medium text-slate-600">appendPath</label>
-                <div className="mt-1 inline-flex w-full items-center gap-2 rounded-xl border border-slate-200 bg-white py-2 pl-3 pr-3 text-sm text-slate-900">
-                  <input
-                    type="checkbox"
-                    checked={Boolean(configValue.appendPath)}
-                    onChange={(e) => onChange({ ...configValue, appendPath: e.target.checked })}
-                    className="h-4 w-4 rounded border-slate-300 accent-slate-900"
-                  />
-                  <span className="text-sm text-slate-700">{t("appendPathHint")}</span>
+                  {showAppendPath ? (
+                    <div>
+                      <label className="block text-xs font-medium text-slate-600 mb-1.5">appendPath</label>
+                      <div className="inline-flex w-full items-center gap-2 rounded-xl border border-slate-200 bg-white py-2 pl-3 pr-3 text-sm text-slate-900">
+                        <input
+                          type="checkbox"
+                          checked={Boolean(configValue.appendPath)}
+                          onChange={(e) => onChange({ ...configValue, appendPath: e.target.checked })}
+                          className="h-4 w-4 rounded border-slate-300 accent-slate-900"
+                        />
+                        <span className="text-sm text-slate-700">{t("appendPathHint")}</span>
+                      </div>
+                    </div>
+                  ) : null}
                 </div>
-              </div>
-            ) : null}
-          </div>
 
-          <div className={"grid grid-cols-1 gap-2 " + (detailCols === 3 ? "sm:grid-cols-3" : "sm:grid-cols-2")}>
-            <div className={detailCols === 3 ? "sm:col-span-3" : "sm:col-span-2"}>
-              <label className="block text-xs font-medium text-slate-600">{t("targetHelp")}</label>
-              <div className="mt-1 flex gap-2">
-                <DropdownSelect
-                  className="w-28 shrink-0"
-                  value={getDestinationKey(configValue)}
-                  onChange={(next) => {
-                    const nextKey = next as DestinationKey;
-                    const currentKey = getDestinationKey(configValue);
-                    const currentValue = asString(configValue[currentKey]);
-                    onChange(setExclusiveDestination(configValue, nextKey, currentValue));
-                  }}
-                  options={[
-                    { value: "target", label: "target" },
-                    { value: "to", label: "to" },
-                    { value: "url", label: "url" },
-                  ]}
-                />
-                <input
-                  value={asString(configValue[getDestinationKey(configValue)])}
-                  onChange={(e) => {
-                    const nextKey = getDestinationKey(configValue);
-                    onChange(setExclusiveDestination(configValue, nextKey, e.target.value));
-                  }}
-                  placeholder="https://example.com"
-                  className="min-w-0 flex-1 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-slate-300"
-                />
-              </div>
-            </div>
+                <div className={"grid grid-cols-1 gap-2 " + (detailCols === 3 ? "sm:grid-cols-3" : "sm:grid-cols-2")}>
+                  <div className={detailCols === 3 ? "sm:col-span-3" : "sm:col-span-2"}>
+                    <LabelWithTooltip label={t("targetLabel")} tooltip={t("targetTooltip")} />
+                    <div className="flex gap-2">
+                      <DropdownSelect
+                        className="w-28 shrink-0"
+                        value={getDestinationKey(configValue)}
+                        onChange={(next) => {
+                          const nextKey = next as DestinationKey;
+                          const currentKey = getDestinationKey(configValue);
+                          const currentValue = asString(configValue[currentKey]);
+                          onChange(setExclusiveDestination(configValue, nextKey, currentValue));
+                        }}
+                        options={[
+                          { value: "target", label: "target" },
+                          { value: "to", label: "to" },
+                          { value: "url", label: "url" },
+                        ]}
+                      />
+                      <input
+                        value={asString(configValue[getDestinationKey(configValue)])}
+                        onChange={(e) => {
+                          const nextKey = getDestinationKey(configValue);
+                          onChange(setExclusiveDestination(configValue, nextKey, e.target.value));
+                        }}
+                        placeholder="https://example.com"
+                        className="min-w-0 flex-1 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-slate-300"
+                      />
+                    </div>
+                  </div>
 
-            {showStatus ? (
-              <div>
-                <label className="block text-xs font-medium text-slate-600">{t("statusHelp")}</label>
-                <input
-                  value={statusValue}
-                  onChange={(e) => {
-                    const raw = e.target.value.trim();
-                    const next = raw === "" ? undefined : raw;
-                    const nextConfig = { ...configValue };
-                    if (next === undefined) {
-                      delete nextConfig.status;
-                      onChange(nextConfig);
-                      return;
-                    }
-                    onChange({ ...nextConfig, status: next });
-                  }}
-                  placeholder="301"
-                  className={
-                    "mt-1 w-full rounded-xl border bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-slate-300 " +
-                    (statusInvalid ? "border-rose-300" : "border-slate-200")
-                  }
-                />
-                {statusInvalid ? (
-                  <p className="mt-1 text-xs text-rose-600">{t("statusInvalid")}</p>
-                ) : null}
-              </div>
-            ) : null}
+                  {showStatus ? (
+                    <div>
+                      <LabelWithTooltip label={t("statusLabel")} tooltip={t("statusTooltip")} />
+                      <input
+                        value={statusValue}
+                        onChange={(e) => {
+                          const raw = e.target.value.trim();
+                          const next = raw === "" ? undefined : raw;
+                          const nextConfig = { ...configValue };
+                          if (next === undefined) {
+                            delete nextConfig.status;
+                            onChange(nextConfig);
+                            return;
+                          }
+                          onChange({ ...nextConfig, status: next });
+                        }}
+                        placeholder="301"
+                        className={
+                          "w-full rounded-xl border bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-slate-300 " +
+                          (statusInvalid ? "border-rose-300" : "border-slate-200")
+                        }
+                      />
+                      {statusInvalid ? <p className="mt-1 text-xs text-rose-600">{t("statusInvalid")}</p> : null}
+                    </div>
+                  ) : null}
 
-            <div>
-              <label className="block text-xs font-medium text-slate-600">{t("priorityHelp")}</label>
-              <input
-                value={priorityValue}
-                onChange={(e) => {
-                  const raw = e.target.value.trim();
-                  const next = raw === "" ? undefined : raw;
-                  const nextConfig = { ...configValue };
-                  if (next === undefined) {
-                    delete nextConfig.priority;
-                    onChange(nextConfig);
-                    return;
-                  }
-                  onChange({ ...nextConfig, priority: next });
-                }}
-                placeholder="0"
-                className={
-                  "mt-1 w-full rounded-xl border bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-slate-300 " +
-                  (priorityInvalid ? "border-rose-300" : "border-slate-200")
-                }
-              />
-              {priorityInvalid ? (
-                <p className="mt-1 text-xs text-rose-600">{t("priorityInvalid")}</p>
-              ) : null}
-            </div>
-          </div>
-
+                  <div>
+                    <LabelWithTooltip label={t("priorityLabel")} tooltip={t("priorityTooltip")} />
+                    <input
+                      value={priorityValue}
+                      onChange={(e) => {
+                        const raw = e.target.value.trim();
+                        const next = raw === "" ? undefined : raw;
+                        const nextConfig = { ...configValue };
+                        if (next === undefined) {
+                          delete nextConfig.priority;
+                          onChange(nextConfig);
+                          return;
+                        }
+                        onChange({ ...nextConfig, priority: next });
+                      }}
+                      placeholder="0"
+                      className={
+                        "w-full rounded-xl border bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-slate-300 " +
+                        (priorityInvalid ? "border-rose-300" : "border-slate-200")
+                      }
+                    />
+                    {priorityInvalid ? <p className="mt-1 text-xs text-rose-600">{t("priorityInvalid")}</p> : null}
+                  </div>
+                </div>
               </>
             );
           })()}
         </div>
       ) : null}
-
-
     </div>
   );
 }
