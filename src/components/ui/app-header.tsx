@@ -54,7 +54,7 @@ export function AppHeader({ mobileSidebarToggle }: AppHeaderProps) {
             </button>
           ) : null}
           <Image
-            src="/favicon.ico"
+            src="/logo.ico"
             alt="i0c.cc"
             width={30}
             height={30}
