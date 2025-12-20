@@ -24,16 +24,20 @@ This project provides two editing modes:
 
 2. Create an OAuth App on GitHub, set the callback URL to `http(s)://<localhost:3000 or your domain>/api/auth/callback/github`, and write the `Client ID` and `Client Secret` into `.env.local` as `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET`. If deploying on ▲ Vercel, configure these as environment variables.
 
-3. Set the target repository information (default is the `data` branch of `IGCyukira/i0c.cc`, modify the following variables as needed):
 
-   ```dotenv
-   GITHUB_REPO_OWNER="IGCyukira"
-   GITHUB_REPO_NAME="i0c.cc"
-   GITHUB_TARGET_BRANCH="data"
-   GITHUB_CONFIG_PATH="redirects.json"
-   ```
 
-4. Generate `NEXTAUTH_SECRET` and write it into `.env.local`. For production, set `NEXTAUTH_URL` to `https://your-domain`; for development, set it to `http://localhost:3000`.
+3. By default, `redirects.json` is loaded from the `data` branch of `IGCyukira/i0c.cc`, and the QR code domain defaults to `https://i0c.cc`. You may modify the following variables as needed:
+
+  ```dotenv
+  GITHUB_REPO_OWNER="IGCyukira"
+  GITHUB_REPO_NAME="i0c.cc"
+  GITHUB_TARGET_BRANCH="data"
+  GITHUB_CONFIG_PATH="redirects.json"
+
+  NEXT_PUBLIC_DOMAIN="https://your-domain.com"
+  ```
+
+1. Generate `NEXTAUTH_SECRET` and write it into `.env.local`. For production, set `NEXTAUTH_URL` to `https://your-domain`; for development, set it to `http://localhost:3000`.
 
    - Using OpenSSL:
      ```bash
@@ -44,14 +48,14 @@ This project provides two editing modes:
      node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
      ```
 
-5. Install dependencies and start the development server:
+2. Install dependencies and start the development server:
 
    ```bash
    npm install
    npm run dev
    ```
 
-6. Open [http://localhost:3000](http://localhost:3000) or **your domain**, log in with a GitHub account that has write access to the repository, and start editing `redirects.json`.
+3. Open [http://localhost:3000](http://localhost:3000) or **your domain**, log in with a GitHub account that has write access to the repository, and start editing `redirects.json`.
 
 ## Features Overview
 

@@ -22,13 +22,15 @@ i0c.cc WebUI 是一个基于 Next.js 16 的管理面板，用于通过 GitHub OA
 
 2. 在 GitHub 创建 OAuth App，回调地址填写 `http(s)://<localhost:3000 或 你的域名>/api/auth/callback/github`，然后将 `Client ID`、`Client Secret` 写入 `.env.local` 的 `GITHUB_CLIENT_ID`、`GITHUB_CLIENT_SECRET`。如果是部署在 ▲ Vercel，将配置写到环境变量便好。
 
-3. 设置目标仓库信息（默认为 `IGCyukira/i0c.cc` 的 `data` 分支，可根据需要修改以下变量）：
+3. 设置信息（`redirects.json` 默认为 `IGCyukira/i0c.cc` 的 `data` 分支，二维码域名默认为 `https://i0c.cc`，可根据需要修改以下变量）：
 
 	```dotenv
 	GITHUB_REPO_OWNER="IGCyukira"
 	GITHUB_REPO_NAME="i0c.cc"
 	GITHUB_TARGET_BRANCH="data"
 	GITHUB_CONFIG_PATH="redirects.json"
+
+	NEXT_PUBLIC_DOMAIN="https://your-domain.com"
 	```
 
 4. 生成 `NEXTAUTH_SECRET` 并写入 `.env.local`。生产环境将 `NEXTAUTH_URL` 设为 `https://你的域名`，开发环境可将 `NEXTAUTH_URL` 设为 `http://localhost:3000`。
