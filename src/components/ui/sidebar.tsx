@@ -18,7 +18,7 @@ export function Sidebar({ title, className, children, footer }: SidebarProps) {
       <div className="flex flex-col gap-4 sm:[@media(min-height:600px)]:sticky sm:[@media(min-height:600px)]:top-20 sm:[@media(min-height:600px)]:max-h-[calc(100vh-6rem)]">
         <div className="flex min-h-0 flex-col rounded-3xl border border-slate-200 bg-white p-6 shadow-lg">
           {title ? <h2 className="text-sm font-semibold text-slate-900">{title}</h2> : null}
-          <div className={(title ? "mt-4 " : "") + "min-h-0 sm:[@media(min-height:600px)]:overflow-y-auto pr-1"}>{children}</div>
+          <div className={(title ? "mt-4 " : "") + "min-h-0 overflow-hidden sm:[@media(min-height:600px)]:overflow-y-auto pr-1"}>{children}</div>
         </div>
 
         {footer ? (
