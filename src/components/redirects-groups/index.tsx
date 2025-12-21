@@ -7,7 +7,7 @@ import { Sidebar } from "@/components/ui/sidebar";
 import { ContentSkeleton, SidebarSkeletonBody, SidebarSkeletonFooter } from "@/components/ui/skeletons";
 import { GroupEntriesEditor } from "@/components/editor/group-entries-editor";
 import { RightPanel } from "@/components/editor/right-panel";
-import { useRedirectsGroups } from "@/composables/redirects-groups/use-redirects-groups";
+import { useRedirectsGroups } from "@/composables/redirects-groups";
 
 import { ManagerSidebarBody } from "./manager-sidebar-body";
 import { ManagerSidebarFooter } from "./manager-sidebar-footer";
