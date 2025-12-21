@@ -107,7 +107,7 @@ export function RedirectsGroupsManager({
   if (isLoading) {
     return (
       <div className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-10 sm:flex-row">
-        <div className="hidden sm:block order-1 w-full sm:w-64 lg:w-80 shrink-0">
+        <div className="hidden sm:[@media(min-height:600px)]:block order-1 w-full sm:w-64 lg:w-80 shrink-0">
           <Sidebar footer={<SidebarSkeletonFooter />} className="h-full">
             <SidebarSkeletonBody />
           </Sidebar>
@@ -124,7 +124,7 @@ export function RedirectsGroupsManager({
   if (loadError) {
     return (
       <div className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-10 sm:flex-row">
-        <div className="hidden sm:block order-1 w-full sm:w-64 lg:w-80 shrink-0">
+        <div className="hidden sm:[@media(min-height:600px)]:block order-1 w-full sm:w-64 lg:w-80 shrink-0">
           <Sidebar title={tGroups("group")} className="h-full">
             <div className="text-sm text-slate-600">{tGroups("cannotLoad")}</div>
           </Sidebar>
@@ -169,14 +169,14 @@ export function RedirectsGroupsManager({
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-10 sm:flex-row">
 
-      <div className="hidden sm:block order-1 w-full sm:w-64 lg:w-80 shrink-0">
+      <div className="hidden sm:[@media(min-height:600px)]:block order-1 w-full sm:w-64 lg:w-80 shrink-0">
         <Sidebar footer={sidebarFooterNode} className="h-full">
           {sidebarBodyNode}
         </Sidebar>
       </div>
 
       {showMobileSidebar ? (
-        <div className="sm:hidden fixed inset-0 z-40 bg-slate-50">
+        <div className="fixed inset-0 z-40 bg-slate-50 sm:[@media(min-height:600px)]:hidden">
           <div className="h-full overflow-y-auto px-6 pb-6 pt-24">
             <div className="mx-auto max-w-6xl space-y-6">
               <Sidebar footer={sidebarFooterNode}>
