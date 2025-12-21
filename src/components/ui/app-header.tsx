@@ -30,7 +30,7 @@ export function AppHeader({ mobileSidebarToggle }: AppHeaderProps) {
               aria-pressed={mobileSidebarToggle.isOpen}
               aria-label={sidebarToggleLabel}
               title={sidebarToggleLabel}
-              className="sm:hidden inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 sm:[@media(min-height:600px)]:hidden"
             >
               {mobileSidebarToggle.isOpen ? (
                 <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5" aria-hidden="true">
