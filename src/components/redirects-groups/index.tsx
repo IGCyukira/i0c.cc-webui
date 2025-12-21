@@ -8,7 +8,7 @@ import { GroupTree, Sidebar } from "@/components/ui/sidebar";
 import { ContentSkeleton, SidebarSkeletonBody, SidebarSkeletonFooter } from "@/components/ui/skeletons";
 import { GroupEntriesEditor } from "@/components/editor/group-entries-editor";
 import { RightPanel } from "@/components/editor/right-panel";
-import { useRedirectsGroups } from "@/components/redirects-groups/use-redirects-groups";
+import { useRedirectsGroups } from "@/composables/redirects-groups/use-redirects-groups";
 
 export type RedirectsGroupsManagerProps = {
   mobileSidebarOpen?: boolean;

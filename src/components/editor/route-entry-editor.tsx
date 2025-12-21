@@ -1,194 +1,40 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useTranslations } from "next-intl";
 
 import { QRCodeButton } from "@/components/ui/qr-code";
+import { LabelWithTooltip } from "@/components/ui/label-with-tooltip";
 
-function LabelWithTooltip({ label, tooltip }: { label: string; tooltip: string }) {
-  return (
-    <div className="flex items-center gap-1.5 mb-1.5">
-      <span className="text-xs font-medium text-slate-600">{label}</span>
-      <div className="group relative flex items-center">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="h-3.5 w-3.5 text-slate-400 cursor-help transition-colors hover:text-slate-600"
-        >
-          <circle cx="12" cy="12" r="10" />
-          <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-          <path d="M12 17h.01" />
-        </svg>
-        <div className="pointer-events-none absolute bottom-full left-1/2 mb-2 w-48 -translate-x-1/2 opacity-0 transform scale-95 transition-all duration-200 group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto z-50">
-          <div className="relative rounded-lg bg-slate-800 px-3 py-2 text-xs text-white shadow-xl leading-relaxed whitespace-pre-wrap text-center">
-            {tooltip}
-            <div className="absolute top-full left-1/2 -mt-1 -ml-1 h-2 w-2 border-4 border-transparent border-t-slate-800"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-type RouteMode = "string" | "object" | "array";
-type DestinationKey = "target" | "to" | "url";
-
-type DropdownOption = {
-  value: string;
-  label: string;
-};
-
-function DropdownSelect({
-  value,
-  options,
-  onChange,
-  className,
-}: {
-  value: string;
-  options: DropdownOption[];
-  onChange: (next: string) => void;
-  className?: string;
-}) {
-  const [open, setOpen] = useState(false);
-  const rootRef = useRef<HTMLDivElement | null>(null);
-  const selected = options.find((option) => option.value === value);
-
-  useEffect(() => {
-    if (!open) return;
-    const onMouseDown = (event: MouseEvent) => {
-      const target = event.target;
-      if (!(target instanceof Node)) return;
-      if (rootRef.current && !rootRef.current.contains(target)) {
-        setOpen(false);
-      }
-    };
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setOpen(false);
-    };
-    document.addEventListener("mousedown", onMouseDown);
-    document.addEventListener("keydown", onKeyDown);
-    return () => {
-      document.removeEventListener("mousedown", onMouseDown);
-      document.removeEventListener("keydown", onKeyDown);
-    };
-  }, [open]);
-
-  return (
-    <div ref={rootRef} className={"relative " + (className ?? "")}>
-      <button
-        type="button"
-        onClick={() => setOpen((previous) => !previous)}
-        className="w-full rounded-xl border border-slate-200 bg-white py-2 pl-3 pr-10 text-left text-sm text-slate-900 outline-none focus:border-slate-300"
-      >
-        {selected?.label ?? value}
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500"
-          stroke="currentColor"
-          strokeWidth="2"
-        >
-          <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      </button>
-
-      {open ? (
-        <div className="absolute z-10 mt-1 w-full overflow-hidden rounded-xl border border-slate-200 bg-white shadow-lg">
-          <div className="max-h-60 overflow-auto py-1">
-            {options.map((option) => {
-              const isSelected = option.value === value;
-              return (
-                <button
-                  key={option.value}
-                  type="button"
-                  onClick={() => {
-                    onChange(option.value);
-                    setOpen(false);
-                  }}
-                  className={
-                    "w-full px-3 py-2 text-left text-sm " +
-                    (isSelected
-                      ? "bg-slate-50 font-medium text-slate-900"
-                      : "text-slate-700 hover:bg-slate-50")
-                  }
-                >
-                  {option.label}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      ) : null}
-    </div>
-  );
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
-}
-
-function asString(value: unknown): string {
-  return typeof value === "string" ? value : "";
-}
-
-function normalizeStatus(value: unknown): string {
-  if (typeof value === "number" && Number.isFinite(value)) {
-    return String(value);
-  }
-  return typeof value === "string" ? value : "";
-}
-
-function normalizePriority(value: unknown): string {
-  if (typeof value === "number" && Number.isFinite(value)) {
-    return String(value);
-  }
-  return typeof value === "string" ? value : "";
-}
-
-function getMode(value: unknown): RouteMode {
-  if (Array.isArray(value)) return "array";
-  if (isRecord(value)) return "object";
-  return "string";
-}
-
-function createEmptyConfig(): Record<string, unknown> {
-  return { type: "prefix", target: "", appendPath: true };
-}
-
-function getDestinationKey(config: Record<string, unknown>): DestinationKey {
-  if (typeof config.target === "string") return "target";
-  if (typeof config.to === "string") return "to";
-  if (typeof config.url === "string") return "url";
-  return "target";
-}
-
-function setExclusiveDestination(
-  config: Record<string, unknown>,
-  key: DestinationKey,
-  value: string
-): Record<string, unknown> {
-  const next: Record<string, unknown> = { ...config };
-  delete next.target;
-  delete next.to;
-  delete next.url;
-  next[key] = value;
-  return next;
-}
+import { DropdownSelect } from "@/components/ui/dropdown-select";
+import {
+  asString,
+  createEmptyConfig,
+  getDestinationKey,
+  getMode,
+  isRecord,
+  normalizePriority,
+  normalizeStatus,
+  setExclusiveDestination,
+  type DestinationKey,
+  type RouteMode,
+} from "@/composables/editor/route-utils";
 
 export type RouteEntryEditorProps = {
   value: unknown;
   onChange: (next: unknown) => void;
   level?: number;
   allowArray?: boolean;
-  pathKey?: string; 
+  pathKey?: string;
 };
 
-export function RouteEntryEditor({ value, onChange, level = 0, allowArray = true, pathKey = "" }: RouteEntryEditorProps) {
+export function RouteEntryEditor({ 
+  value, 
+  onChange, 
+  level = 0, 
+  allowArray = true, 
+  pathKey = "" 
+}: RouteEntryEditorProps) {
   const t = useTranslations("routeEntry");
 
   const mode = useMemo(() => getMode(value), [value]);
@@ -303,8 +149,8 @@ export function RouteEntryEditor({ value, onChange, level = 0, allowArray = true
             className={
               "relative inline-flex w-full items-center justify-center whitespace-nowrap rounded-lg py-1.5 px-3 text-xs font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-500 focus-visible:ring-offset-2 " +
               (mode === "string"
-                ? "bg-slate-900 text-white shadow-sm" 
-                : "text-slate-700 hover:bg-slate-50") 
+                ? "bg-slate-900 text-white"
+                : "text-slate-700 hover:bg-slate-50")
             }
           >
             {t("quick")}
@@ -316,7 +162,7 @@ export function RouteEntryEditor({ value, onChange, level = 0, allowArray = true
             className={
               "relative inline-flex w-full items-center justify-center whitespace-nowrap rounded-lg py-1.5 px-3 text-xs font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-500 focus-visible:ring-offset-2 " +
               (mode === "object"
-                ? "bg-slate-900 text-white shadow-sm"
+                ? "bg-slate-900 text-white"
                 : "text-slate-700 hover:bg-slate-50")
             }
           >
@@ -330,7 +176,7 @@ export function RouteEntryEditor({ value, onChange, level = 0, allowArray = true
               className={
                 "relative inline-flex w-full items-center justify-center whitespace-nowrap rounded-lg py-1.5 px-3 text-xs font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-500 focus-visible:ring-offset-2 " +
                 (mode === "array"
-                  ? "bg-slate-900 text-white shadow-sm"
+                  ? "bg-slate-900 text-white"
                   : "text-slate-700 hover:bg-slate-50")
               }
             >
@@ -340,7 +186,6 @@ export function RouteEntryEditor({ value, onChange, level = 0, allowArray = true
             <div aria-hidden className="h-7" />
           )}
         </div>
-
       </div>
 
       {mode === "string" ? (
@@ -402,7 +247,7 @@ export function RouteEntryEditor({ value, onChange, level = 0, allowArray = true
                   value={Array.isArray(item) ? "" : item}
                   allowArray={false}
                   level={level + 1}
-                  pathKey={pathKey} 
+                  pathKey={pathKey}
                   onChange={(nextItem) => {
                     const safeNext = Array.isArray(nextItem) ? "" : nextItem;
                     const next = arrayValue.slice();
