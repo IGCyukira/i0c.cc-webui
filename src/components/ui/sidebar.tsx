@@ -14,7 +14,7 @@ export type SidebarProps = {
 
 export function Sidebar({ title, className, children, footer }: SidebarProps) {
   return (
-    <aside className={"w-full shrink-0 sm:max-w-sm " + (className ?? "")}>
+    <aside className={"w-full shrink-0 sm:[@media(min-height:600px)]:max-w-sm " + (className ?? "")}>
       <div className="flex flex-col gap-4 sm:[@media(min-height:600px)]:sticky sm:[@media(min-height:600px)]:top-20 sm:[@media(min-height:600px)]:max-h-[calc(100vh-6rem)]">
         <div className="flex min-h-0 flex-col rounded-3xl border border-slate-200 bg-white p-6 shadow-lg">
           {title ? <h2 className="text-sm font-semibold text-slate-900">{title}</h2> : null}
