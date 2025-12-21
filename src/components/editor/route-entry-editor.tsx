@@ -296,53 +296,31 @@ export function RouteEntryEditor({ value, onChange, level = 0, allowArray = true
       <div className="space-y-2">
         <span className="block text-xs font-medium text-slate-500">{t("ruleType")}</span>
 
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-3 gap-1 rounded-xl border border-slate-200 bg-white p-1">
           <button
             type="button"
             onClick={() => setMode("string")}
             className={
-              "relative inline-flex w-full items-center justify-center whitespace-nowrap rounded-lg border py-1 pl-3 pr-3 text-xs leading-none " +
+              "relative inline-flex w-full items-center justify-center whitespace-nowrap rounded-lg py-1.5 px-3 text-xs font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-500 focus-visible:ring-offset-2 " +
               (mode === "string"
-                ? "border-slate-300 bg-white text-slate-900 pr-7"
-                : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50")
+                ? "bg-slate-900 text-white shadow-sm" 
+                : "text-slate-700 hover:bg-slate-50") 
             }
           >
             {t("quick")}
-            {mode === "string" ? (
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            ) : null}
           </button>
 
           <button
             type="button"
             onClick={() => setMode("object")}
             className={
-              "relative inline-flex w-full items-center justify-center whitespace-nowrap rounded-lg border py-1 pl-3 pr-3 text-xs leading-none " +
+              "relative inline-flex w-full items-center justify-center whitespace-nowrap rounded-lg py-1.5 px-3 text-xs font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-500 focus-visible:ring-offset-2 " +
               (mode === "object"
-                ? "border-slate-300 bg-white text-slate-900 pr-7"
-                : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50")
+                ? "bg-slate-900 text-white shadow-sm"
+                : "text-slate-700 hover:bg-slate-50")
             }
           >
             {t("detail")}
-            {mode === "object" ? (
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            ) : null}
           </button>
 
           {allowArray ? (
@@ -350,29 +328,19 @@ export function RouteEntryEditor({ value, onChange, level = 0, allowArray = true
               type="button"
               onClick={() => setMode("array")}
               className={
-                "relative inline-flex w-full items-center justify-center whitespace-nowrap rounded-lg border py-1 pl-3 pr-3 text-xs leading-none " +
+                "relative inline-flex w-full items-center justify-center whitespace-nowrap rounded-lg py-1.5 px-3 text-xs font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-500 focus-visible:ring-offset-2 " +
                 (mode === "array"
-                  ? "border-slate-300 bg-white text-slate-900 pr-7"
-                  : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50")
+                  ? "bg-slate-900 text-white shadow-sm"
+                  : "text-slate-700 hover:bg-slate-50")
               }
             >
               {t("multi")}
-              {mode === "array" ? (
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              ) : null}
             </button>
           ) : (
             <div aria-hidden className="h-7" />
           )}
         </div>
+
       </div>
 
       {mode === "string" ? (
@@ -494,7 +462,7 @@ export function RouteEntryEditor({ value, onChange, level = 0, allowArray = true
 
                   {showAppendPath ? (
                     <div>
-                      <label className="block text-xs font-medium text-slate-600 mb-1.5">appendPath</label>
+                      <label className="block text-xs font-medium text-slate-600 mb-1.5">{t("appendPath")}</label>
                       <div className="inline-flex w-full items-center gap-2 rounded-xl border border-slate-200 bg-white py-2 pl-3 pr-3 text-sm text-slate-900">
                         <input
                           type="checkbox"

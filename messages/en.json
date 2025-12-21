@@ -88,6 +88,7 @@
       "addRuleItem": "Add rule item",
       "typeLabel": "Type",
       "typeTooltip": "prefix: Prefix matching\nexact: Exact path matching\nproxy: Reverse proxy",
+      "appendPath": "appendPath",
       "appendPathHint": "Append remaining path",
       "targetLabel": "Target",
       "targetTooltip": "Supports target, to, url fields\nFunctionally identical",
