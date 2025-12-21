@@ -121,7 +121,6 @@ export function RedirectsGroupsManager({
     );
   }
 
-  // 渲染错误状态
   if (loadError) {
     return (
       <div className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-10 sm:flex-row">
@@ -177,8 +176,8 @@ export function RedirectsGroupsManager({
       </div>
 
       {showMobileSidebar ? (
-        <div className="sm:hidden fixed inset-0 z-50 bg-slate-50">
-          <div className="h-full overflow-y-auto px-6 py-6">
+        <div className="sm:hidden fixed inset-0 z-40 bg-slate-50">
+          <div className="h-full overflow-y-auto px-6 pb-6 pt-24">
             <div className="mx-auto max-w-6xl space-y-6">
               <Sidebar footer={sidebarFooterNode}>
                 {sidebarBodyNode}
