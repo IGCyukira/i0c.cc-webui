@@ -72,7 +72,9 @@
     "schemaLoadFail": "Failed to load schema: {message}",
     "schemaValidateFailUnknown": "Schema validation failed: unknown error",
     "schemaValidateFail": "Schema validation failed:\n{lines}{more}",
-    "schemaValidateMore": "\n… and {count} more"
+    "schemaValidateMore": "\n… and {count} more",
+    "tableOfContents": "Rules in this group",
+    "onThisPage": "On this page"
   },
   "routeEntry": {
       "ruleType": "Rule type",
