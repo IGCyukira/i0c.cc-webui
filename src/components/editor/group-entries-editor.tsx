@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import type { RedirectGroup } from "@/composables/redirects-groups/model";
 
 import { RouteEntryEditor } from "@/components/editor/route-entry-editor";
+import { getRuleAnchorId, GroupEntriesMobileTOC } from "@/components/editor/group-entries-toc";
 
 export type GroupEntriesEditorProps = {
   group: RedirectGroup;
@@ -25,6 +26,8 @@ export function GroupEntriesEditor({
 
   return (
     <div>
+      <GroupEntriesMobileTOC entries={group.entries} />
+
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="min-w-0">
           <div className="flex items-center gap-2">
@@ -70,7 +73,11 @@ export function GroupEntriesEditor({
           </div>
         ) : null}
         {group.entries.map((entry) => (
-          <div key={entry.id} className="rounded-2xl border border-slate-200 bg-white p-5">
+          <div 
+            key={entry.id} 
+            id={getRuleAnchorId(entry)}
+            className="scroll-mt-32 rounded-2xl border border-slate-200 bg-white p-5 transition-shadow hover:shadow-sm"
+          >
             <div className="flex items-end gap-3">
               <div className="min-w-0 flex-1">
                 <label className="block text-xs font-medium text-slate-600">{t("pathKey")}</label>
