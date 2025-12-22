@@ -6,7 +6,6 @@ import { useTranslations } from "next-intl";
 import { Sidebar } from "@/components/ui/sidebar";
 import { ContentSkeleton, SidebarSkeletonBody, SidebarSkeletonFooter } from "@/components/ui/skeletons";
 import { GroupEntriesEditor } from "@/components/editor/group-entries-editor";
-import { GroupEntriesDesktopTOC } from "@/components/editor/group-entries-toc";
 import { RightPanel } from "@/components/editor/right-panel";
 import { useRedirectsGroups } from "@/composables/redirects-groups";
 
@@ -105,11 +104,9 @@ export function RedirectsGroupsManager({
 
   const showMobileSidebar = !!mobileSidebarOpen;
 
-  const showDesktopTOC = selectedGroup && editorMode === "rules";
-
   if (isLoading) {
     return (
-      <div className="mx-auto flex max-w-[1600px] flex-col gap-6 px-4 py-10 sm:px-6 lg:flex-row">
+      <div className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-10 sm:flex-row">
         <div className="hidden sm:[@media(min-height:600px)]:block order-1 w-full sm:w-64 lg:w-80 shrink-0">
           <Sidebar footer={<SidebarSkeletonFooter />} className="h-full">
             <SidebarSkeletonBody />
@@ -126,7 +123,7 @@ export function RedirectsGroupsManager({
 
   if (loadError) {
     return (
-      <div className="mx-auto flex max-w-[1600px] flex-col gap-6 px-4 py-10 sm:px-6 lg:flex-row">
+      <div className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-10 sm:flex-row">
         <div className="hidden sm:[@media(min-height:600px)]:block order-1 w-full sm:w-64 lg:w-80 shrink-0">
           <Sidebar title={tGroups("group")} className="h-full">
             <div className="text-sm text-slate-600">{tGroups("cannotLoad")}</div>
@@ -170,9 +167,9 @@ export function RedirectsGroupsManager({
   );
 
   return (
-    <div className="mx-auto flex max-w-[1600px] flex-col items-start gap-6 px-4 py-10 sm:px-6 lg:flex-row">
+    <div className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-10 sm:flex-row">
 
-      <div className="hidden sm:[@media(min-height:600px)]:block order-1 w-full sm:w-64 lg:w-80 shrink-0 sticky top-24 h-[calc(100vh-6rem)] self-start overflow-hidden">
+      <div className="hidden sm:[@media(min-height:600px)]:block order-1 w-full sm:w-64 lg:w-80 shrink-0">
         <Sidebar footer={sidebarFooterNode} className="h-full">
           {sidebarBodyNode}
         </Sidebar>
@@ -181,7 +178,7 @@ export function RedirectsGroupsManager({
       {showMobileSidebar ? (
         <div className="fixed inset-0 z-40 bg-slate-50 sm:[@media(min-height:600px)]:hidden">
           <div className="h-full overflow-y-auto px-6 pb-6 pt-24">
-            <div className="mx-auto max-w-[1600px] space-y-6">
+            <div className="mx-auto max-w-6xl space-y-6">
               <Sidebar footer={sidebarFooterNode}>
                 {sidebarBodyNode}
               </Sidebar>
@@ -197,7 +194,7 @@ export function RedirectsGroupsManager({
         </div>
       ) : null}
 
-      <section className="order-2 min-w-0 flex-1 w-full">
+      <section className="order-2 min-w-0 flex-1">
         <RightPanel
           editorMode={editorMode}
           onEnterRulesMode={enterRulesMode}
@@ -223,13 +220,6 @@ export function RedirectsGroupsManager({
           }
         />
       </section>
-
-      {showDesktopTOC ? (
-        <aside className="hidden lg:block order-3 w-64 shrink-0 sticky top-24 h-[calc(100vh-6rem)] overflow-y-auto">
-          <GroupEntriesDesktopTOC entries={selectedGroup.entries} />
-        </aside>
-      ) : null}
-
     </div>
   );
 }

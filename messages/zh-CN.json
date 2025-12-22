@@ -72,9 +72,7 @@
     "schemaLoadFail": "Schema 加载失败：{message}",
     "schemaValidateFailUnknown": "Schema 校验失败：未知错误",
     "schemaValidateFail": "Schema 校验失败：\n{lines}{more}",
-    "schemaValidateMore": "\n… 还有 {count} 条",
-    "tableOfContents": "本组规则",
-    "onThisPage": "本页内容"
+    "schemaValidateMore": "\n… 还有 {count} 条"
   },
   "routeEntry": {
       "ruleType": "规则类型",
