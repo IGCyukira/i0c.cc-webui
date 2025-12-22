@@ -1,9 +1,9 @@
 'use client';
 
 import type { ReactNode } from "react";
+import { useTranslations } from "next-intl";
 
 import type { RedirectGroup } from "@/composables/redirects-groups/model";
-import { useTranslations } from "next-intl";
 
 export type SidebarProps = {
   title?: string;
@@ -14,14 +14,11 @@ export type SidebarProps = {
 
 export function Sidebar({ title, className, children, footer }: SidebarProps) {
   return (
-    <aside className={"h-full w-full shrink-0 " + (className ?? "")}>
-      <div className="flex h-full flex-col gap-4">
-        <div className="flex min-h-0 flex-1 flex-col rounded-3xl border border-slate-200 bg-white p-6 shadow-lg">
-          {title ? <h2 className="text-sm font-semibold text-slate-900 shrink-0">{title}</h2> : null}
-          
-          <div className={(title ? "mt-4 " : "") + "flex-1 overflow-y-auto pr-1"}>
-            {children}
-          </div>
+    <aside className={"w-full shrink-0 sm:[@media(min-height:600px)]:max-w-sm " + (className ?? "")}>
+      <div className="flex flex-col gap-4 sm:[@media(min-height:600px)]:sticky sm:[@media(min-height:600px)]:top-20 sm:[@media(min-height:600px)]:max-h-[calc(100vh-6rem)]">
+        <div className="flex min-h-0 flex-col rounded-3xl border border-slate-200 bg-white p-6 shadow-lg">
+          {title ? <h2 className="text-sm font-semibold text-slate-900">{title}</h2> : null}
+          <div className={(title ? "mt-4 " : "") + "min-h-0 overflow-hidden sm:[@media(min-height:600px)]:overflow-y-auto pr-1"}>{children}</div>
         </div>
 
         {footer ? (
