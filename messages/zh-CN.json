@@ -58,7 +58,8 @@
     "pathKey": "路径",
     "pathKeyPlaceholder": "/foo 或 /bar/baz",
     "confirmDeleteRule": "确定要删除这条规则吗？",
-    "deleteRule": "删除规则"
+    "deleteRule": "删除规则",
+    "locate": "定位"
   },
   "editor": {
     "entries": "条目目录",

@@ -1,5 +1,7 @@
 'use client';
 
+import { useTranslations } from "next-intl";
+
 import type { RedirectEntry } from "@/composables/redirects-groups/model";
 
 export type RouteEntriesCatalogProps = {
@@ -29,11 +31,16 @@ export function RouteEntriesCatalog({
   onRemoveEntry,
   showLocateButton,
 }: RouteEntriesCatalogProps) {
+  const tEntries = useTranslations("entries");
+
   if (!entries.length) {
     return null;
   }
 
   const headerTitle = title ?? "Entries";
+  const addLabel = addRuleLabel ?? tEntries("addRule");
+  const deleteLabel = tEntries("deleteRule");
+  const locateLabel = tEntries("locate");
 
   const renderEntryIcon = (key: string) => {
     if (!key || key === "/") {
@@ -110,7 +117,7 @@ export function RouteEntriesCatalog({
                   <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5" stroke="currentColor" strokeWidth="2">
                     <path d="M12 6v12m6-6H6" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
-                  {addRuleLabel ?? "新增规则"}
+                  {addLabel}
                 </button>
               ) : null}
             </div>
@@ -141,11 +148,11 @@ export function RouteEntriesCatalog({
                     event.stopPropagation();
                     handleJump(entry.id);
                   }}
-                  className="shrink-0 inline-flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
-                  aria-label="定位"
-                  title="定位"
+                  className="shrink-0 inline-flex h-6 w-6 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
+                  aria-label={locateLabel}
+                  title={locateLabel}
                 >
-                  <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                     <path d="M12 2v4" strokeLinecap="round" />
                     <path d="M12 18v4" strokeLinecap="round" />
                     <path d="M2 12h4" strokeLinecap="round" />
@@ -161,18 +168,17 @@ export function RouteEntriesCatalog({
                   onClick={(event) => {
                     event.preventDefault();
                     event.stopPropagation();
-                    const label = entry.key || "/";
-                    const ok = window.confirm(`确认删除「${label}」？`);
+                    const ok = window.confirm(tEntries("confirmDeleteRule"));
                     if (!ok) {
                       return;
                     }
                     onRemoveEntry(entry.id);
                   }}
-                  className="shrink-0 inline-flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-rose-600 hover:bg-rose-50"
-                  aria-label="删除"
-                  title="删除"
+                  className="shrink-0 inline-flex h-6 w-6 items-center justify-center rounded-lg border border-slate-200 bg-white text-rose-600 hover:bg-rose-50"
+                  aria-label={deleteLabel}
+                  title={deleteLabel}
                 >
-                  <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                     <path d="M3 6h18" strokeLinecap="round" strokeLinejoin="round" />
                     <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" strokeLinecap="round" strokeLinejoin="round" />
                     <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" strokeLinecap="round" strokeLinejoin="round" />
@@ -211,7 +217,7 @@ if (variant === "collapsible") {
                   <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5" stroke="currentColor" strokeWidth="2">
                     <path d="M12 6v12m6-6H6" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
-                  {addRuleLabel ?? "新增规则"}
+                  {addLabel}
                 </button>
               ) : null}
               <svg

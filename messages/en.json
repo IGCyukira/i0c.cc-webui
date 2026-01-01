@@ -58,7 +58,8 @@
     "pathKey": "Path key",
     "pathKeyPlaceholder": "/foo or /bar/baz",
     "confirmDeleteRule": "Delete this rule?",
-    "deleteRule": "Delete rule"
+    "deleteRule": "Delete rule",
+    "locate": "Locate"
   },
   "editor": {
     "entries": "Entries",

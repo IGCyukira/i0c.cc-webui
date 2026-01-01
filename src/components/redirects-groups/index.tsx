@@ -185,6 +185,8 @@ export function RedirectsGroupsManager({
       className="hidden lg:[@media(min-height:700px)]:flex shrink-0 max-h-[30vh] rounded-3xl border border-slate-200 bg-white shadow-lg"
       onAddRule={() => addEntry(selectedGroup.id)}
       addRuleLabel={tEntries("addRule")}
+      onRemoveEntry={(entryId) => removeEntry(selectedGroup.id, entryId)}
+      showLocateButton
     />
   ) : null;
 
@@ -197,6 +199,8 @@ export function RedirectsGroupsManager({
       collapsibleContentClassName="max-h-[40vh]"
       onAddRule={() => addEntry(selectedGroup.id)}
       addRuleLabel={tEntries("addRule")}
+      onRemoveEntry={(entryId) => removeEntry(selectedGroup.id, entryId)}
+      showLocateButton
     />
   ) : null;
 
