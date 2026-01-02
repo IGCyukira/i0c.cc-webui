@@ -16,9 +16,7 @@
     "signOut": "Sign out",
     "language": "Language",
     "english": "English",
-    "chinese": "中文",
-    "switchToEnglish": "Switch language to English",
-    "switchToChinese": "Switch language to Chinese"
+    "chinese": "中文"
   },
   "common": {
     "close": "Close"
@@ -37,16 +35,14 @@
     "saving": "Saving...",
     "save": "Save changes",
     "viewCommit": "View commit",
-    "commitUrl": "Commit URL",
-    "commitUrlPlaceholder": "Paste GitHub commit link (https://...)",
-    "commitUrlInvalid": "Please enter a valid https URL.",
-    "commitUrlTypeHint": "URL should be a GitHub commit page (/commit/) or a .json file link.",
     "saveOk": "Saved",
     "configUrl": "Config URL",
     "configUrlPlaceholder": "Paste a GitHub .json file URL (https://...)",
     "configUrlInvalid": "Please enter a valid https URL.",
     "configUrlTypeHint": "The URL must point to a .json file.",
     "loadConfig": "Load",
+    "expandAll": "Expand",
+    "collapseAll": "Collapse",
     "saveFail": "Save failed",
     "loadFail": "Failed to load config",
     "previewFailWithMessage": "// Preview generation failed: {message}",
@@ -68,7 +64,9 @@
     "pathKeyPlaceholder": "/foo or /bar/baz",
     "confirmDeleteRule": "Delete this rule?",
     "deleteRule": "Delete rule",
-    "locate": "Locate"
+    "locate": "Locate",
+    "expand": "Expand",
+    "collapse": "Collapse"
   },
   "editor": {
     "entries": "Entries",
@@ -114,8 +112,6 @@
     "openQRCode": "Generate QR code",
     "faviconAlt": "Favicon",
     "faviconLabel": "Favicon Logo",
-    "showFavicon": "Show favicon",
-    "hideFavicon": "Hide favicon",
     "download": "Download QR code"
   }
 }

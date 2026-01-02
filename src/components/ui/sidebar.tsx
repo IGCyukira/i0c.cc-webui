@@ -10,15 +10,20 @@ export type SidebarProps = {
   className?: string;
   children: ReactNode;
   footer?: ReactNode;
+  scroll?: boolean;
 };
 
-export function Sidebar({ title, className, children, footer }: SidebarProps) {
+export function Sidebar({ title, className, children, footer, scroll = true }: SidebarProps) {
   return (
-    <aside className={"w-full shrink-0 sm:[@media(min-height:600px)]:max-w-sm " + (className ?? "")}>
+    <aside className={"w-full shrink-0 sm:max-w-sm " + (className ?? "")}>
       <div className="flex min-h-0 flex-col gap-4">
         <div className="flex min-h-0 flex-col rounded-3xl border border-slate-200 bg-white p-6 shadow-lg">
           {title ? <h2 className="text-sm font-semibold text-slate-900">{title}</h2> : null}
-          <div className={(title ? "mt-4 " : "") + "min-h-0 overflow-y-auto pr-1 [@media(min-height:700px)]:max-h-[30vh]"}>{children}</div>
+          {scroll ? (
+            <div className={(title ? "mt-4 " : "") + "min-h-0 overflow-y-auto pr-1 max-h-[30vh]"}>{children}</div>
+          ) : (
+            <div className={(title ? "mt-4 " : "") + "min-h-0"}>{children}</div>
+          )}
         </div>
 
         {footer ? (
@@ -33,6 +38,7 @@ export function Sidebar({ title, className, children, footer }: SidebarProps) {
 
 export type GroupTreeProps = {
   groups: RedirectGroup[];
+  collapsed?: boolean;
   selectedGroupId: string | null;
   editingGroupId: string | null;
   editingName: string;
@@ -49,6 +55,7 @@ const MAX_GROUP_DEPTH = 5;
 
 export function GroupTree({
   groups,
+  collapsed,
   selectedGroupId,
   editingGroupId,
   editingName,
@@ -160,7 +167,7 @@ export function GroupTree({
             </div>
           </div>
 
-          {canNest && group.children.length > 0 ? <ul>{render(group.children, depth + 1)}</ul> : null}
+          {!collapsed && canNest && group.children.length > 0 ? <ul>{render(group.children, depth + 1)}</ul> : null}
         </li>
       );
     });

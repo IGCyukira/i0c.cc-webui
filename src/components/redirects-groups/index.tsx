@@ -116,7 +116,7 @@ export function RedirectsGroupsManager({
             <Sidebar>
               <SidebarSkeletonBody />
             </Sidebar>
-            <div className="hidden lg:[@media(min-height:700px)]:flex shrink-0 max-h-[30vh] rounded-3xl border border-slate-200 bg-white p-6 shadow-lg">
+            <div className="hidden lg:flex shrink-0 max-h-[30vh] rounded-3xl border border-slate-200 bg-white p-6 shadow-lg">
               <SidebarSkeletonCatalog />
             </div>
             <div className="flex shrink-0 flex-col rounded-3xl border border-slate-200 bg-white p-6 shadow-lg">
@@ -186,21 +186,7 @@ export function RedirectsGroupsManager({
     <RouteEntriesCatalog
       entries={selectedGroup.entries}
       title={tEditor("entries") ?? "Entries"}
-      className="hidden lg:[@media(min-height:700px)]:flex shrink-0 max-h-[30vh] rounded-3xl border border-slate-200 bg-white shadow-lg"
-      onAddRule={() => addEntry(selectedGroup.id)}
-      addRuleLabel={tEntries("addRule")}
-      onRemoveEntry={(entryId) => removeEntry(selectedGroup.id, entryId)}
-      showLocateButton
-    />
-  ) : null;
-
-  const desktopCompactCatalogNode = selectedGroup && selectedGroup.entries.length > 0 ? (
-    <RouteEntriesCatalog
-      entries={selectedGroup.entries}
-      title={tEditor("entries") ?? "Entries"}
-      variant="collapsible"
-      wrapperClassName="hidden lg:[@media(max-height:699px)]:block shrink-0"
-      collapsibleContentClassName="max-h-[40vh]"
+      className="hidden lg:flex shrink-0 max-h-[30vh] rounded-3xl border border-slate-200 bg-white shadow-lg"
       onAddRule={() => addEntry(selectedGroup.id)}
       addRuleLabel={tEntries("addRule")}
       onRemoveEntry={(entryId) => removeEntry(selectedGroup.id, entryId)}
@@ -229,10 +215,9 @@ export function RedirectsGroupsManager({
       <div className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-10 sm:flex-row">
         <div className="hidden lg:block order-1 w-full sm:w-64 lg:w-80 shrink-0">
           <div className="flex min-h-0 flex-col gap-4 lg:sticky lg:top-20 lg:max-h-[calc(100vh-6rem)]">
-            <Sidebar>
+            <Sidebar scroll={false}>
               {sidebarBodyNode}
             </Sidebar>
-            {desktopCompactCatalogNode}
             {catalogNode}
             {sidebarFooterNode}
           </div>
@@ -245,7 +230,7 @@ export function RedirectsGroupsManager({
                 className="mx-auto h-full max-w-6xl overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-slate-200 scrollbar-track-transparent"
                 style={{ scrollbarGutter: "stable" }}
               >
-                <div className="space-y-6">
+                <div className="space-y-6 p-2">
                   <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-lg">
                     {sidebarBodyNode}
                   </div>

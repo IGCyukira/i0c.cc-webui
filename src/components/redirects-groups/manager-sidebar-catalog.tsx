@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from "react";
 import { useTranslations } from "next-intl";
 
 import type { RedirectEntry } from "@/composables/redirects-groups/model";
@@ -32,6 +33,7 @@ export function RouteEntriesCatalog({
   showLocateButton,
 }: RouteEntriesCatalogProps) {
   const tEntries = useTranslations("entries");
+  const [entriesExpanded, setEntriesExpanded] = useState(true);
 
   if (!entries.length) {
     return null;
@@ -41,6 +43,8 @@ export function RouteEntriesCatalog({
   const addLabel = addRuleLabel ?? tEntries("addRule");
   const deleteLabel = tEntries("deleteRule");
   const locateLabel = tEntries("locate");
+  const allowToggle = variant === "plain" && !hideHeader;
+  const showList = !allowToggle || entriesExpanded;
 
   const renderEntryIcon = (key: string) => {
     if (!key || key === "/") {
@@ -120,77 +124,100 @@ export function RouteEntriesCatalog({
                   {addLabel}
                 </button>
               ) : null}
+
+              {variant === "plain" ? (
+                <button
+                  type="button"
+                  onClick={() => setEntriesExpanded((value) => !value)}
+                  className="inline-flex h-6 w-6 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
+                  title={entriesExpanded ? tEntries("collapse") : tEntries("expand")}
+                  aria-label={entriesExpanded ? tEntries("collapse") : tEntries("expand")}
+                >
+                  <svg
+                    className={"h-4 w-4 text-slate-500 transition-transform " + (entriesExpanded ? "rotate-180" : "")}
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    aria-hidden="true"
+                  >
+                    <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </button>
+              ) : null}
             </div>
           </div>
         </div>
       )}
-      <div className="flex-1 min-h-0 overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-slate-200 scrollbar-track-transparent" style={{ scrollbarGutter: "stable" }}>
-        <ul className="space-y-1 text-sm text-slate-700">
-          {entries.map((entry) => (
-            <li key={entry.id} className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => handleJump(entry.id)}
-                className="min-w-0 flex-1 truncate rounded-lg px-2 py-1 text-left hover:bg-slate-50"
-                title={entry.key || "/"}
-              >
-                <span className="inline-flex min-w-0 items-center gap-2 text-sm text-slate-700">
-                  {renderEntryIcon(entry.key)}
-                  <span className="block min-w-0 truncate">{entry.key || "/"}</span>
-                </span>
-              </button>
-
-              {showLocateButton ? (
+      {showList ? (
+        <div className="flex-1 min-h-0 overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-slate-200 scrollbar-track-transparent" style={{ scrollbarGutter: "stable" }}>
+          <ul className="space-y-1 text-sm text-slate-700">
+            {entries.map((entry) => (
+              <li key={entry.id} className="group flex items-center gap-2 rounded-lg px-2 py-1 hover:bg-slate-50">
                 <button
                   type="button"
-                  onClick={(event) => {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    handleJump(entry.id);
-                  }}
-                  className="shrink-0 inline-flex h-6 w-6 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
-                  aria-label={locateLabel}
-                  title={locateLabel}
+                  onClick={() => handleJump(entry.id)}
+                  className="min-w-0 flex-1 truncate rounded-lg px-1 py-1 text-left"
+                  title={entry.key || "/"}
                 >
-                  <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-                    <path d="M12 2v4" strokeLinecap="round" />
-                    <path d="M12 18v4" strokeLinecap="round" />
-                    <path d="M2 12h4" strokeLinecap="round" />
-                    <path d="M18 12h4" strokeLinecap="round" />
-                    <circle cx="12" cy="12" r="3" />
-                  </svg>
+                  <span className="inline-flex min-w-0 items-center gap-2 text-sm text-slate-700">
+                    {renderEntryIcon(entry.key)}
+                    <span className="block min-w-0 truncate">{entry.key || "/"}</span>
+                  </span>
                 </button>
-              ) : null}
 
-              {onRemoveEntry ? (
-                <button
-                  type="button"
-                  onClick={(event) => {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    const ok = window.confirm(tEntries("confirmDeleteRule"));
-                    if (!ok) {
-                      return;
-                    }
-                    onRemoveEntry(entry.id);
-                  }}
-                  className="shrink-0 inline-flex h-6 w-6 items-center justify-center rounded-lg border border-slate-200 bg-white text-rose-600 hover:bg-rose-50"
-                  aria-label={deleteLabel}
-                  title={deleteLabel}
-                >
-                  <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-                    <path d="M3 6h18" strokeLinecap="round" strokeLinejoin="round" />
-                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" strokeLinecap="round" strokeLinejoin="round" />
-                    <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" strokeLinecap="round" strokeLinejoin="round" />
-                    <path d="M10 11v6" strokeLinecap="round" strokeLinejoin="round" />
-                    <path d="M14 11v6" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </button>
-              ) : null}
-            </li>
-          ))}
-        </ul>
-      </div>
+                {showLocateButton ? (
+                  <button
+                    type="button"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      event.stopPropagation();
+                      handleJump(entry.id);
+                    }}
+                    className="shrink-0 inline-flex h-6 w-6 items-center justify-center rounded-lg border border-slate-200 bg-transparent text-slate-600 hover:bg-slate-100"
+                    aria-label={locateLabel}
+                    title={locateLabel}
+                  >
+                    <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                      <path d="M12 2v4" strokeLinecap="round" />
+                      <path d="M12 18v4" strokeLinecap="round" />
+                      <path d="M2 12h4" strokeLinecap="round" />
+                      <path d="M18 12h4" strokeLinecap="round" />
+                      <circle cx="12" cy="12" r="3" />
+                    </svg>
+                  </button>
+                ) : null}
+
+                {onRemoveEntry ? (
+                  <button
+                    type="button"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      event.stopPropagation();
+                      const ok = window.confirm(tEntries("confirmDeleteRule"));
+                      if (!ok) {
+                        return;
+                      }
+                      onRemoveEntry(entry.id);
+                    }}
+                    className="shrink-0 inline-flex h-6 w-6 items-center justify-center rounded-lg border border-slate-200 bg-transparent text-rose-600 hover:bg-rose-50"
+                    aria-label={deleteLabel}
+                    title={deleteLabel}
+                  >
+                    <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                      <path d="M3 6h18" strokeLinecap="round" strokeLinejoin="round" />
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" strokeLinecap="round" strokeLinejoin="round" />
+                      <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" strokeLinecap="round" strokeLinejoin="round" />
+                      <path d="M10 11v6" strokeLinecap="round" strokeLinejoin="round" />
+                      <path d="M14 11v6" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </button>
+                ) : null}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
     </div>
   );
 

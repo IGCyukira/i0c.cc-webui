@@ -16,9 +16,7 @@
     "signOut": "退出",
     "language": "语言",
     "english": "English",
-    "chinese": "中文",
-    "switchToEnglish": "切换为英文",
-    "switchToChinese": "切换为中文"
+    "chinese": "中文"
   },
   "common": {
     "close": "关闭"
@@ -42,10 +40,8 @@
     "configUrlInvalid": "请输入有效的 https 链接。",
     "configUrlTypeHint": "链接需要指向 .json 文件。",
     "loadConfig": "加载配置",
-    "commitUrl": "提交地址",
-    "commitUrlPlaceholder": "粘贴 GitHub 提交链接（https://...）",
-    "commitUrlInvalid": "请输入有效的 https 链接。",
-    "commitUrlTypeHint": "链接需要是 GitHub 提交页（/commit/）或 .json 文件链接。",
+    "expandAll": "展开",
+    "collapseAll": "收起",
     "saveOk": "保存成功",
     "saveFail": "保存失败",
     "loadFail": "加载配置失败",
@@ -68,7 +64,9 @@
     "pathKeyPlaceholder": "/foo 或 /bar/baz",
     "confirmDeleteRule": "确定要删除这条规则吗？",
     "deleteRule": "删除规则",
-    "locate": "定位"
+    "locate": "定位",
+    "expand": "展开",
+    "collapse": "收起"
   },
   "editor": {
     "entries": "条目目录",
@@ -114,8 +112,6 @@
     "openQRCode": "生成二维码",
     "faviconAlt": "网站图标",
     "faviconLabel": "Favicon 图标",
-    "showFavicon": "显示图标",
-    "hideFavicon": "隐藏图标",
     "download": "保存图片"
   }
 }
