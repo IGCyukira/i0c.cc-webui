@@ -10,7 +10,8 @@
   },
   "pnpm": {
     "overrides": {
-      "preact": "10.28.2"
+      "preact": "10.28.2",
+      "minimatch": "10.2.2"
     },
     "onlyBuiltDependencies": [
       "@parcel/watcher",
