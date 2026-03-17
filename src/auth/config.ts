@@ -10,17 +10,30 @@ function requireEnv(key: string): string {
   return value;
 }
 
+function readOptionalEnv(key: string): string | undefined {
+  const value = process.env[key];
+  if (!value) {
+    return undefined;
+  }
+  const trimmed = value.trim();
+  return trimmed.length > 0 ? trimmed : undefined;
+}
+
 type NextAuthHandler = typeof import("next-auth/next")["default"];
 type AuthConfig = Parameters<NextAuthHandler>[2];
 
 export const authOptions = {
+  secret: requireEnv("NEXTAUTH_SECRET"),
   providers: [
     GitHubProvider({
       clientId: requireEnv("GITHUB_CLIENT_ID"),
       clientSecret: requireEnv("GITHUB_CLIENT_SECRET"),
       authorization: {
         params: {
-          scope: "repo"
+          // Default GitHub OAuth scopes are usually "read:user user:email".
+          // We additionally need repo contents access for reading/writing redirects config.
+          // Use the narrowest scope possible for your use case.
+          scope: readOptionalEnv("GITHUB_OAUTH_SCOPE") ?? "read:user user:email public_repo"
         }
       }
     })
@@ -36,9 +49,11 @@ export const authOptions = {
       return token;
     },
     async session({ session, token }) {
+      // IMPORTANT: Never expose OAuth access tokens to the browser.
+      // Keep tokens only in the server-side JWT and read them in API routes via getToken().
       const accessToken = (token as JWT & { accessToken?: unknown }).accessToken;
-      if (session.user && typeof accessToken === "string") {
-        (session as Session & { accessToken?: string }).accessToken = accessToken;
+      if (typeof accessToken === "string" && accessToken.length > 0) {
+        (session as Session & { hasAccessToken?: boolean }).hasAccessToken = true;
       }
       return session;
     }

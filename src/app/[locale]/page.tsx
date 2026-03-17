@@ -5,12 +5,12 @@ import { SignInPanel } from "@/components/ui/sign-in-panel";
 import { authOptions } from "@/auth/config";
 import { RedirectsGroupsPage } from "@/components/redirects-groups/redirects-groups-page";
 
-type SessionWithToken = Session & { accessToken: string };
+type SessionWithToken = Session & { hasAccessToken: true };
 
 function hasAccessToken(session: Session | null): session is SessionWithToken {
   return (
     !!session &&
-    typeof (session as Session & { accessToken?: unknown }).accessToken === "string"
+    (session as Session & { hasAccessToken?: unknown }).hasAccessToken === true
   );
 }
 

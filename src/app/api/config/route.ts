@@ -1,24 +1,24 @@
 import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth/next";
-import type { Session } from "next-auth";
+import { getToken } from "next-auth/jwt";
 import { z } from "zod";
 
-import { authOptions } from "@/auth/config";
 import { getRedirectConfig, listRedirectHistory, updateRedirectConfig } from "@/lib/github";
 
-type SessionWithToken = Session & { accessToken: string };
-
-async function requireSession(): Promise<SessionWithToken | null> {
-  const session = (await getServerSession(authOptions)) as Session | null;
-  if (!session || typeof (session as Session & { accessToken?: unknown }).accessToken !== "string") {
+async function requireAccessToken(request: Request): Promise<string | null> {
+  const secret = process.env.NEXTAUTH_SECRET;
+  if (!secret) {
+    // This should be configured for every environment.
     return null;
   }
-  return session as SessionWithToken;
+
+  const token = await getToken({ req: request as unknown as never, secret });
+  const accessToken = (token as { accessToken?: unknown } | null)?.accessToken;
+  return typeof accessToken === "string" && accessToken.length > 0 ? accessToken : null;
 }
 
 export async function GET(request: Request) {
-  const session = await requireSession();
-  if (!session) {
+  const accessToken = await requireAccessToken(request);
+  if (!accessToken) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -26,8 +26,8 @@ export async function GET(request: Request) {
 
   try {
     const [config, history] = await Promise.all([
-      getRedirectConfig(session.accessToken, { sourceUrl }),
-      listRedirectHistory(session.accessToken, 10, { sourceUrl })
+      getRedirectConfig(accessToken, { sourceUrl }),
+      listRedirectHistory(accessToken, 10, { sourceUrl })
     ]);
 
     return NextResponse.json({ config, history });
@@ -45,8 +45,8 @@ const updateSchema = z.object({
 });
 
 export async function PUT(request: Request) {
-  const session = await requireSession();
-  if (!session) {
+  const accessToken = await requireAccessToken(request);
+  if (!accessToken) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -57,7 +57,7 @@ export async function PUT(request: Request) {
   }
 
   try {
-    const result = await updateRedirectConfig(session.accessToken, parsed.data);
+    const result = await updateRedirectConfig(accessToken, parsed.data);
     return NextResponse.json(result);
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";
